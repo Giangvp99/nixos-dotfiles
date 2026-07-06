@@ -857,7 +857,7 @@ in {
         "kwinrc"."Effect-blurplus"."WindowClasses" = "";
         "kwinrc"."NightColor"."Active" = true;
         "kwinrc"."NightColor"."Mode" = "Constant";
-        "kwinrc"."NightColor"."NightTemperature" = 2800;
+        "kwinrc"."NightColor"."NightTemperature" = 4500;
         "kwinrc"."Plugins"."blurEnabled" = false;
         "kwinrc"."Plugins"."contrastEnabled" = true;
         "kwinrc"."Plugins"."diminactiveEnabled" = true;
