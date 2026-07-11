@@ -1,14 +1,12 @@
-{
-  config,
-  lib,
-  pkgs,
-  inputs,
-  ...
+{ config
+, lib
+, pkgs
+, inputs
+, ...
 }:
 let
   cfg = config.userSettings.hyprland;
   font = config.stylix.fonts.monospace.name;
-  term = config.userSettings.terminal;
   # spawnEditor = config.userSettings.spawnEditor;
   # spawnBrowser = config.userSettings.spawnBrowser;
   performance = config.userSettings.hyprland.performanceOptimizations;
@@ -105,8 +103,7 @@ in
     };
     xdg.configFile."hypr/hyprland.lua".source =
       config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hypr/hyprland.lua";
-    home.packages = (
-      with pkgs;
+    home.packages = with pkgs;
       [
         qpwgraph
         networkmanagerapplet
@@ -187,8 +184,7 @@ in
           if pgrep -x nixos-rebuild > /dev/null || pgrep -x home-manager > /dev/null || pgrep -x kdenlive > /dev/null || pgrep -x FL64.exe > /dev/null || pgrep -x blender > /dev/null || pgrep -x flatpak > /dev/null;
           then echo "Shouldn't suspend"; sleep 10; else echo "Should suspend"; systemctl suspend; fi
         '')
-      ]
-    );
+      ];
     services.hyprpolkitagent.enable = true;
     services.swayosd.enable = true;
     services.swayosd.topMargin = 0.5;

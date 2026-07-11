@@ -1,9 +1,8 @@
-{
-  lib,
-  config,
-  pkgs,
-  inputs,
-  ...
+{ lib
+, config
+, pkgs
+, inputs
+, ...
 }:
 
 let
@@ -19,7 +18,7 @@ in
       default = "orichalcum";
       type = lib.types.enum (
         builtins.attrNames (
-          lib.filterAttrs (name: type: type == "directory") (builtins.readDir ../../themes)
+          lib.filterAttrs (_name: type: type == "directory") (builtins.readDir ../../themes)
         )
       );
       description = "Theme for stylix to use system wide. A list of themes can be found in the `themes` directory.";

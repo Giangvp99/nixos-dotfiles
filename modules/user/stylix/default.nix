@@ -1,10 +1,9 @@
-{
-  config,
-  lib,
-  pkgs,
-  inputs,
-  osConfig,
-  ...
+{ config
+, lib
+, pkgs
+, inputs
+, osConfig
+, ...
 }:
 
 let
@@ -17,10 +16,10 @@ in
       enable = lib.mkEnableOption "Enable stylix theming";
     };
     userSettings.stylix.theme = lib.mkOption {
-      default = if (osConfig.stylix.enable) then osConfig.systemSettings.stylix.theme else "io";
+      default = if osConfig.stylix.enable then osConfig.systemSettings.stylix.theme else "io";
       type = lib.types.enum (
         builtins.attrNames (
-          lib.filterAttrs (name: type: type == "directory") (builtins.readDir ../../themes)
+          lib.filterAttrs (_name: type: type == "directory") (builtins.readDir ../../themes)
         )
       );
       description = "Theme for stylix to use for the user. A list of themes can be found in the `themes` directory.";

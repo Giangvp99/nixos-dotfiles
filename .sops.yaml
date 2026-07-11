@@ -1,0 +1,8 @@
+keys:
+  - &j4n9 age1nj26340v60v92mvrsjagpe0h6wvjd673azw30zqa634djequsgyqcx9gj6
+
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *j4n9

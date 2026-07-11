@@ -2,7 +2,8 @@
 
 let
   cfg = config.systemSettings.tlp;
-in {
+in
+{
   options = {
     systemSettings.tlp = {
       enable = lib.mkEnableOption "Enable tlp power management";

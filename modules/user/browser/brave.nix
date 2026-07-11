@@ -1,8 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 
 let
@@ -18,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.brave.enable = true;
     programs.brave.package = pkgs.brave;
-    
+
     xdg.mimeApps.defaultApplications = lib.mkIf (config.userSettings.browser == "brave") {
       "text/html" = "brave-browser.desktop";
       "x-scheme-handler/http" = "brave-browser.desktop";

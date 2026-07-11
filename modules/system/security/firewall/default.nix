@@ -2,21 +2,36 @@
 
 let
   cfg = config.systemSettings.security.firewall;
-in {
+in
+{
   options = {
     systemSettings.security.firewall = {
       # TODO make this more granular and better :|
-      enable = lib.mkEnableOption "Actvate firewall with ports open only for syncthing";
+      enable = lib.mkEnableOption "Actvate firewall";
+
+      allowSyncthing = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Open ports for Syncthing.";
+      };
     };
   };
 
   config = lib.mkIf cfg.enable {
     # Firewall
-    networking.firewall.enable = true;
-    # Open ports in the firewall.
-    networking.firewall.allowedTCPPorts = [ 22000 21027 ]; # syncthing
-    networking.firewall.allowedUDPPorts = [ 22000 21027 ]; # syncthing
-    # Or disable the firewall altogether.
-    # networking.firewall.enable = false;
+    networking.firewall = {
+      enable = true;
+      allowPing = true;
+      allowedTCPPorts =
+        lib.optionals cfg.allowSyncthing [
+          22000
+          21027
+        ];
+      allowedUDPPorts =
+        lib.optionals cfg.allowSyncthing [
+          22000
+          21027
+        ];
+    };
   };
 }

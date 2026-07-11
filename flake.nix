@@ -24,16 +24,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
-    {
-      self,
-      nixpkgs,
-      nixpkgs-unstable,
-      home-manager,
-      stylix,
-      plasma-manager,
-      ...
+    { self
+    , nixpkgs
+    , nixpkgs-unstable
+    , home-manager
+    , sops-nix
+    , treefmt-nix
+    , ...
     }@inputs:
     let
       system = "x86_64-linux";
@@ -45,39 +52,51 @@
         inherit system;
         config.allowUnfree = true;
       };
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
       hosts = builtins.filter (x: x != null) (
         lib.mapAttrsToList (name: value: if (value == "directory") then name else null) (
           builtins.readDir ./hosts
         )
       );
+
+      treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
     in
     {
+      formatter.${system} = treefmtEval.config.build.wrapper;
+
+      checks.${system} = {
+        formatting = treefmtEval.config.build.check self;
+      };
+
       nixosConfigurations = builtins.listToAttrs (
-        map (host: {
-          name = host;
-          value = lib.nixosSystem {
-            inherit system;
-            modules = [
-              { config.networking.hostName = host; }
-              # stylix.nixosModules.stylix
-              (./hosts + "/${host}")
-              ./modules/system
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.extraSpecialArgs = {
-                  inherit pkgs;
-                  inherit pkgs-unstable;
-                  inherit inputs;
-                };
-              }
-            ];
-            specialArgs = {
-              #  inherit pkgs;
-              inherit inputs;
+        map
+          (host: {
+            name = host;
+            value = lib.nixosSystem {
+              inherit system;
+              modules = [
+                { config.networking.hostName = host; }
+                # stylix.nixosModules.stylix
+                (./hosts + "/${host}")
+                ./modules/system
+
+                sops-nix.nixosModules.sops
+                home-manager.nixosModules.home-manager
+                {
+                  home-manager.extraSpecialArgs = {
+                    inherit pkgs;
+                    inherit pkgs-unstable;
+                    inherit inputs;
+                  };
+                }
+              ];
+              specialArgs = {
+                #  inherit pkgs;
+                inherit inputs;
+              };
             };
-          };
-        }) hosts
+          })
+          hosts
       );
     };
 }

@@ -2,7 +2,8 @@
 
 let
   cfg = config.systemSettings.printing;
-in {
+in
+{
   options = {
     systemSettings.printing = {
       enable = lib.mkEnableOption "Enable printing";

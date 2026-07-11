@@ -2,7 +2,8 @@
 
 let
   cfg = config.systemSettings.security.gpg;
-in {
+in
+{
   options = {
     systemSettings.security.gpg = {
       enable = lib.mkEnableOption "Enable gpg";

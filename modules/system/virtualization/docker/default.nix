@@ -1,8 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 
 let
@@ -13,6 +12,12 @@ in
   options = {
     systemSettings.virtualization.docker = {
       enable = lib.mkEnableOption "Enable docker";
+
+      addUsersToDockerGroup = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Add admin users to docker group. This is root-equivalent.";
+      };
     };
   };
 
@@ -20,15 +25,22 @@ in
     virtualisation.docker = {
       enable = true;
       enableOnBoot = true;
-      autoPrune.enable = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
     };
-    users.users = builtins.listToAttrs (
-      map (user: {
-        name = user;
-        value = {
-          extraGroups = [ "docker" ];
-        };
-      }) adminUsers
+    users.users = lib.mkIf cfg.addUsersToDockerGroup (
+      builtins.listToAttrs (
+        map
+          (user: {
+            name = user;
+            value = {
+              extraGroups = [ "docker" ];
+            };
+          })
+          adminUsers
+      )
     );
     environment.systemPackages = with pkgs; [
       docker
