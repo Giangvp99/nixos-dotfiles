@@ -41,6 +41,36 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    fonts = {
+      packages = with pkgs; [
+        nerd-fonts.fira-code
+        fira-sans
+        twitter-color-emoji
+      ];
+
+      fontconfig = {
+        enable = true;
+
+        defaultFonts = {
+          monospace = [
+            "FiraCode Nerd Font Mono"
+            "FiraCode Nerd Font"
+          ];
+
+          sansSerif = [
+            "Fira Sans"
+          ];
+
+          serif = [
+            "Fira Sans"
+          ];
+
+          emoji = [
+            "Twitter Color Emoji"
+          ];
+        };
+      };
+    };
     stylix = {
       enable = true;
       autoEnable = false;

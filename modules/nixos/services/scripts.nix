@@ -95,8 +95,17 @@ let
           sudo nix store optimise
           ;;
 
+        lock)
+          sudo chown -R root:root "$flake"
+          sudo chmod -R go-w "$flake"
+          ;;
+
+        unlock)
+          sudo chown -R "$USER:users" "$flake"
+          ;;
+
         *)
-          echo "Usage: nixosctl {build|test|switch|boot|rollback|update|fmt|check|doctor|gc|optimise}"
+          echo "Usage: nixosctl {build|test|switch|boot|rollback|update|fmt|check|doctor|gc|optimise|lock|unlock}"
           exit 1
           ;;
       esac

@@ -7,6 +7,7 @@
     ../../modules/home/programs/media.nix
     ../../modules/home/programs/onlyoffice.nix
     ../../modules/home/programs/telegram.nix
+    ../../modules/home/programs/viber.nix
     ../../modules/home/programs/vscode.nix
   ];
 
@@ -23,6 +24,7 @@
       media.enable = true;
       onlyoffice.enable = true;
       telegram.enable = true;
+      viber.enable = true;
       vscode.enable = true;
     };
   };

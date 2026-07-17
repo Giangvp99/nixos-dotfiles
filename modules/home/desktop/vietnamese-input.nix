@@ -23,6 +23,9 @@ in
         fcitx5-gtk
       ];
     };
+    home.sessionVariables = {
+      GTK_IM_MODULE = lib.mkForce "";
+    };
     home.file.".config/fcitx5/config".text = ''
       [Hotkey]
       # Enumerate when press trigger key repeatedly
