@@ -21,7 +21,7 @@
 
     virtualization.docker = {
       enable = true;
-      users = []; #ntgiang
+      users = [ ]; #ntgiang
     };
   };
 

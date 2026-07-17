@@ -1,9 +1,8 @@
-{
-  config,
-  lib,
-  pkgs,
-  inputs,
-  ...
+{ config
+, lib
+, pkgs
+, inputs
+, ...
 }:
 
 let
@@ -46,7 +45,7 @@ in
       enable = true;
       autoEnable = false;
 
-      polarity = theme.polarity;
+      inherit (theme) polarity;
       base16Scheme = theme;
 
       image = pkgs.fetchurl {
