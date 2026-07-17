@@ -1,25 +1,29 @@
-{ config, ... }:
-
 {
   imports = [
-    ./configuration.nix
-    ./hardware-configuration.nix
+    ./hardware.nix
+
+    ../../profiles/nixos/common.nix
+    ../../profiles/nixos/laptop.nix
+    ../../profiles/nixos/plasma.nix
+
+    ../../modules/nixos/services/brave-policy.nix
+    ../../modules/nixos/services/flatpak.nix
+    ../../modules/nixos/virtualization/docker.nix
   ];
 
-  config = {
-    home-manager.users = builtins.listToAttrs (
-      map
-        (user: {
-          name = user;
-          value = {
-            imports = [
-              ./home.nix
-              (./. + "/home-${user}.nix")
-              ../../modules/user
-            ];
-          };
-        })
-        config.systemSettings.users
-    );
+  networking.hostName = "j4n9-hplaptop";
+
+  my = {
+    services = {
+      bravePolicy.enable = true;
+      flatpak.enable = true;
+    };
+
+    virtualization.docker = {
+      enable = true;
+      users = []; #ntgiang
+    };
   };
+
+  system.stateVersion = "26.05";
 }

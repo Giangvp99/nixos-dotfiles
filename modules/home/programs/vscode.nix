@@ -3,20 +3,19 @@
 , pkgs
 , ...
 }:
+
 let
-  cfg = config.userSettings.vscode;
+  cfg = config.my.programs.vscode;
 in
 {
-  options = {
-    userSettings.vscode = {
-      enable = lib.mkEnableOption "Enable vscode";
-    };
-  };
+  options.my.programs.vscode.enable =
+    lib.mkEnableOption "Visual Studio Code";
 
   config = lib.mkIf cfg.enable {
     programs.vscode = {
       enable = true;
       package = pkgs.vscode;
+
       profiles.default.extensions = with pkgs.vscode-extensions; [
         dracula-theme.theme-dracula
         vscodevim.vim
