@@ -25,6 +25,7 @@ _:
 
       hyprland.enable = false;
       plasma.enable = true;
+      telegram.enable = true;
     };
     # users.users.ntgiang.description = "Nguyen Truong Giang";
   };
