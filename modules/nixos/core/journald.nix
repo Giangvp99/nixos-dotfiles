@@ -12,8 +12,11 @@ in
   config = lib.mkIf cfg.enable {
     services.journald = {
       extraConfig = ''
-        SystemMaxUse=50M
-        SystemMaxFiles=5
+        SystemMaxUse=200M
+        SystemKeepFree=1G
+        MaxRetentionSec=30day
+        Compress=yes
+        Seal=yes
       '';
 
       rateLimitBurst = 500;

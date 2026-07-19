@@ -9,6 +9,8 @@
     ../../modules/home/programs/telegram.nix
     ../../modules/home/programs/viber.nix
     ../../modules/home/programs/vscode.nix
+
+    ../../modules/home/programs/journalism-tools.nix
   ];
 
   my = {
@@ -26,6 +28,7 @@
       telegram.enable = true;
       viber.enable = true;
       vscode.enable = true;
+      journalismTools.enable = true;
     };
   };
 }
