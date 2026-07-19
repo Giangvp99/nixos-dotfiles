@@ -26,7 +26,7 @@
       networking.enable = true;
       nix = {
         enable = true;
-        trustedUsers = ["root" "ntgiang"];
+        trustedUsers = [ "root" "ntgiang" ];
       };
       packages.enable = true;
     };
