@@ -59,6 +59,8 @@
 
       checks.${system} = {
         formatting = treefmtEval.config.build.check self;
+        j4n9-hplaptop =
+          self.nixosConfigurations.j4n9-hplaptop.config.system.build.toplevel;
       };
 
       nixosConfigurations = {
