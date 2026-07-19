@@ -1,5 +1,10 @@
+{ inputs
+, ...
+}:
 {
   imports = [
+    inputs.nixvim.homeModules.nixvim
+
     ../../profiles/home/common.nix
     ../../profiles/home/desktop.nix
     ../../profiles/home/plasma.nix
