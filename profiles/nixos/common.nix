@@ -24,7 +24,10 @@
       journald.enable = true;
       locale.enable = true;
       networking.enable = true;
-      nix.enable = true;
+      nix = {
+        enable = true;
+        trustedUsers = ["root" "ntgiang"];
+      };
       packages.enable = true;
     };
 

@@ -1,14 +1,29 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 let
   cfg = config.my.core.nix;
 in
 {
-  options.my.core.nix.enable = lib.mkEnableOption "the common Nix configuration";
+  options.my.core.nix = {
+    enable = lib.mkEnableOption "the common Nix configuration";
+
+    trustedUsers = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+
+      default = [
+        "root"
+      ];
+
+      description = ''
+        Users allowed to perform trusted Nix operations.
+      '';
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     nix = {
@@ -20,10 +35,7 @@ in
           "flakes"
         ];
 
-        trusted-users = [
-          "root"
-          "@wheel"
-        ];
+        trusted-users = cfg.trustedUsers;
 
         auto-optimise-store = true;
         download-buffer-size = 500000000;
