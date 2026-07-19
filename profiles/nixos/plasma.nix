@@ -23,7 +23,7 @@
 
     services = {
       automount.enable = true;
-      avahi.enable = true;
+      # avahi.enable = true;
     };
   };
 }

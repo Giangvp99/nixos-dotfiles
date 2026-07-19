@@ -59,7 +59,8 @@
       maintenance = {
         enable = true;
         flakeDirectory = "/etc/nixos";
-        autoUpdateCheck = false;
+        autoUpdateCheck = true;
+        updateCheckCalendar = "Sun 10:00";
       };
 
       scripts = {

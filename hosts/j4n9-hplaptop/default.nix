@@ -17,6 +17,8 @@
     services = {
       bravePolicy.enable = true;
       flatpak.enable = true;
+      printing.enable = false;
+      avahi.enable = false;
     };
 
     virtualization.docker = {
