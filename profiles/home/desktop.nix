@@ -10,6 +10,7 @@
     ../../modules/home/programs/viber.nix
     ../../modules/home/programs/vscode.nix
     ../../modules/home/programs/yazi.nix
+    ../../modules/home/programs/shotcut.nix
 
     ../../modules/home/programs/journalism-tools.nix
   ];
@@ -30,6 +31,7 @@
       viber.enable = true;
       vscode.enable = true;
       yazi.enable = true;
+      shotcut.enable = true;
 
       journalismTools.enable = true;
     };

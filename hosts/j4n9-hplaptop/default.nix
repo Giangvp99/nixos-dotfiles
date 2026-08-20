@@ -5,6 +5,7 @@
     ../../profiles/nixos/common.nix
     ../../profiles/nixos/laptop.nix
     ../../profiles/nixos/plasma.nix
+    ../../profiles/nixos/hyprland.nix
 
     ../../modules/nixos/services/brave-policy.nix
     ../../modules/nixos/services/flatpak.nix
