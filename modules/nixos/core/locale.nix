@@ -10,7 +10,7 @@ in
   options.my.core.locale.enable = lib.mkEnableOption "locale and time-zone settings";
 
   config = lib.mkIf cfg.enable {
-    time.timeZone = "Asia/Bangkok";
+    time.timeZone = "Asia/Kolkata";
 
     services.timesyncd.enable = true;
 
