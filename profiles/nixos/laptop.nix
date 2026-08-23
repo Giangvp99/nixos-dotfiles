@@ -5,6 +5,7 @@
     ../../modules/nixos/hardware/storage-health.nix
     ../../modules/nixos/hardware/firmware.nix
     ../../modules/nixos/services/printing.nix
+    ../../modules/nixos/scripts/touchpadAutoToggle.nix
   ];
 
   my = {
@@ -23,6 +24,8 @@
 
       firmware.enable = true;
     };
+
+    scripts.touchpadAutoToggle.enable = true;
 
     # services.printing.enable = true;
   };

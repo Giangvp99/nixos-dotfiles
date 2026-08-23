@@ -70,11 +70,11 @@ in
       devenv
     ];
 
-    programs.neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-    };
+    # programs.neovim = {
+    #   enable = true;
+    #   viAlias = true;
+    #   vimAlias = true;
+    # };
 
     programs.direnv.enable = true;
     programs.direnv.enableZshIntegration = true;

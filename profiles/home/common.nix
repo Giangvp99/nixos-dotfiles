@@ -7,8 +7,11 @@
     ../../modules/home/programs/gpg.nix
     ../../modules/home/programs/yazi.nix
 
+    ../../modules/home/programs/nixvim
+
     ../../modules/home/shell/alacritty.nix
     ../../modules/home/shell/zsh.nix
+    ../../modules/home/shell/zoxide.nix
   ];
 
   my = {
@@ -26,11 +29,14 @@
 
       gpg.enable = true;
       yazi.enable = true;
+
+      nixvim.enable = true;
     };
 
     shell = {
       alacritty.enable = true;
       zsh.enable = true;
+      zoxide.enable = true;
     };
   };
 
