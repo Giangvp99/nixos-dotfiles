@@ -1,11 +1,7 @@
-{ config
-, lib
+{ lib
 , ...
 }:
 
-let
-  cfg = config.my.desktop.hyprland;
-in
 {
   imports = [
     ./packages.nix
@@ -42,8 +38,8 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    xdg.configFile."hypr/hyprland.lua".source =
-      ./config/hyprland.lua;
-  };
+  # config = lib.mkIf cfg.enable {
+  # xdg.configFile."hypr/hyprland.lua".source =
+  #  ./config/hyprland.lua;
+  # };
 }
