@@ -16,6 +16,9 @@
     ../../modules/nixos/services/backup.nix
     ../../modules/nixos/services/maintenance.nix
     ../../modules/nixos/services/scripts.nix
+    ../../modules/nixos/services/protonvpn.nix
+    #    ../../modules/nixos/virtualization/vmware.nix
+    ../../modules/nixos/virtualization/libvirt.nix
   ];
 
   my = {
@@ -26,7 +29,10 @@
       networking.enable = true;
       nix = {
         enable = true;
-        trustedUsers = [ "root" "ntgiang" ];
+        trustedUsers = [
+          "root"
+          "ntgiang"
+        ];
       };
       packages.enable = true;
     };
@@ -63,10 +69,17 @@
         updateCheckCalendar = "Sun 10:00";
       };
 
+      protonvpn.enable = true;
+
       scripts = {
         enable = true;
         flakeDirectory = "/etc/nixos";
       };
+    };
+    # virtualization.vmware.enable = true;
+    virtualization.libvirt = {
+      enable = true;
+      users = [ "ntgiang" ];
     };
   };
 }

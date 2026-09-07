@@ -12,6 +12,8 @@
     ../../modules/home/shell/alacritty.nix
     ../../modules/home/shell/zsh.nix
     ../../modules/home/shell/zoxide.nix
+
+    ../../modules/home/programs/virt-manager.nix
   ];
 
   my = {
@@ -31,6 +33,8 @@
       yazi.enable = true;
 
       nixvim.enable = true;
+
+      virt-manager.enable = true;
     };
 
     shell = {
@@ -38,6 +42,7 @@
       zsh.enable = true;
       zoxide.enable = true;
     };
+
   };
 
   programs.home-manager.enable = true;

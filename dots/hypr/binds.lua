@@ -1,4 +1,5 @@
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
+local returnKey = "Return"
 
 local terminal = "kitty"
 local fileManager = "dolphin"
@@ -6,7 +7,7 @@ local menu = "fuzzel"
 local browser = "brave"
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + " .. returnKey, hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(
@@ -75,3 +76,7 @@ hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+-- Screenshot selected area -> Swappy
+hl.bind("Print", hl.dsp.exec_cmd("screenshot-area"))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("screenshot-output"))

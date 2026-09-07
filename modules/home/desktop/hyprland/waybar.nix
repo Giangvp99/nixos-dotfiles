@@ -6,6 +6,8 @@
 
 let
   cfg = config.my.desktop.hyprland;
+  waybarConfig = "/etc/nixos/dots/waybar/config.jsonc";
+  waybarStyle = "/etc/nixos/dots/waybar/style.css";
 in
 {
   config = lib.mkIf cfg.enable {
@@ -16,125 +18,38 @@ in
         enable = true;
         targets = [ "graphical-session.target" ];
       };
+    };
+    home.file = {
+      ".config/waybar/config.jsonc".source = config.lib.file.mkOutOfStoreSymlink waybarConfig;
 
-      settings.mainBar = {
-        layer = "top";
-        position = "top";
+      ".config/waybar/style.css".source = config.lib.file.mkOutOfStoreSymlink waybarStyle;
+    };
 
-        height = 34;
-        spacing = 6;
-
-        modules-left = [
-          "hyprland/workspaces"
-          "hyprland/window"
-        ];
-
-        modules-center = [
-          "clock"
-        ];
-
-        modules-right = [
-          "tray"
-          "idle_inhibitor"
-          "pulseaudio"
-          "backlight"
-          "network"
-          "bluetooth"
-          "battery"
-        ];
-
-        "hyprland/workspaces" = {
-          disable-scroll = true;
-          all-outputs = false;
-          format = "{name}";
-
-          persistent-workspaces = {
-            "*" = 5;
-          };
-        };
-
-        "hyprland/window" = {
-          max-length = 60;
-          separate-outputs = true;
-        };
-
-        clock = {
-          format = "{:%H:%M}";
-          format-alt = "{:%A, %d/%m/%Y}";
-          tooltip-format = "<tt>{calendar}</tt>";
-        };
-
-        tray = {
-          spacing = 10;
-        };
-
-        idle_inhibitor = {
-          format = "{icon}";
-
-          format-icons = {
-            activated = "";
-            deactivated = "";
-          };
-        };
-
-        pulseaudio = {
-          format = "{icon} {volume}%";
-          format-muted = "󰝟";
-
-          format-icons = {
-            default = [
-              ""
-              ""
-              ""
-            ];
-          };
-
-          on-click = "${lib.getExe pkgs.pavucontrol}";
-        };
-
-        backlight = {
-          format = "󰃟 {percent}%";
-        };
-
-        network = {
-          format-wifi = "  {signalStrength}%";
-          format-ethernet = "󰈀";
-          format-disconnected = "󰖪";
-          tooltip-format = "{ifname}: {ipaddr}";
-          on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
-        };
-
-        bluetooth = {
-          format = "";
-          format-disabled = "󰂲";
-          format-connected = " {num_connections}";
-        };
-
-        battery = {
-          states = {
-            warning = 25;
-            critical = 10;
-          };
-
-          format = "{icon} {capacity}%";
-          format-charging = "󰂄 {capacity}%";
-
-          format-icons = [
-            "󰁺"
-            "󰁻"
-            "󰁼"
-            "󰁽"
-            "󰁾"
-            "󰁿"
-            "󰂀"
-            "󰂁"
-            "󰂂"
-            "󰁹"
-          ];
-        };
+    systemd.user.services.waybar-config-reload = {
+      Unit = {
+        Description = "Reload Waybar configuration on change";
+        After = [ "waybar.service" ];
       };
 
-      style = builtins.readFile ./config/waybar.css;
+      Service = {
+        ExecStart = pkgs.writeShellScript "waybar-config-watcher" ''
+          ${pkgs.inotify-tools}/bin/inotifywait \
+            -m \
+            -e close_write,move,create \
+            /etc/nixos/dots/waybar |
+          while read -r directory event file; do
+            if [ "$file" = "config.jsonc" ]; then
+              ${pkgs.procps}/bin/pkill -SIGUSR2 waybar
+            fi
+          done
+        '';
+
+        Restart = "always";
+      };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
     };
   };
 }

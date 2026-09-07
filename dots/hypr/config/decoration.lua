@@ -1,4 +1,5 @@
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
+
 hl.config({
 	decoration = {
 		rounding = 6,

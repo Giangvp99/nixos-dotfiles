@@ -44,6 +44,10 @@ hl.config({
 	scrolling = {
 		fullscreen_on_one_column = true,
 	},
+
+	xwayland = {
+		force_zero_scaling = true,
+	},
 })
 
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/

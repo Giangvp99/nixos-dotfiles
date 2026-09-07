@@ -9,14 +9,17 @@ in
 {
   config = lib.mkIf cfg.enable {
     programs.nixvim = {
-      # colorschemes.gruvbox = {
-      #   enable = true;
+      colorschemes = {
+        # gruvbox = {
+        #  enable = true;
 
-      #   settings = {
-      #     contrast = "hard";
-      #     transparent_mode = false;
-      #   };
-      # };
+        #  settings = {
+        #    contrast = "hard";
+        #    transparent_mode = false;
+        #  };
+        #};
+        tokyonight.enable = true;
+      };
 
       plugins = {
         lualine = {
