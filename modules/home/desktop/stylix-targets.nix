@@ -7,8 +7,7 @@ let
   cfg = config.my.desktop.stylixTargets;
 in
 {
-  options.my.desktop.stylixTargets.enable =
-    lib.mkEnableOption "Stylix targets for the user desktop";
+  options.my.desktop.stylixTargets.enable = lib.mkEnableOption "Stylix targets for the user desktop";
 
   config = lib.mkIf cfg.enable {
     stylix.targets = {

@@ -3,6 +3,7 @@
     ../../modules/home/desktop/vietnamese-input.nix
 
     ../../modules/home/programs/brave.nix
+    ../../modules/home/programs/chrome.nix
     ../../modules/home/programs/keepass.nix
     ../../modules/home/programs/media.nix
     ../../modules/home/programs/onlyoffice.nix
@@ -23,6 +24,7 @@
         enable = true;
         defaultBrowser = true;
       };
+      chrome.enable = true;
 
       keepass.enable = true;
       media.enable = true;

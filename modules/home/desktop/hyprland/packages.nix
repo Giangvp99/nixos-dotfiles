@@ -16,6 +16,9 @@ in
       kdePackages.ark
       kdePackages.kio-admin
 
+      # GTK / icon fallback
+      adwaita-icon-theme
+
       # Thanh trạng thái và launcher
       waybar
       fuzzel
