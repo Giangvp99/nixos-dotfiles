@@ -14,6 +14,7 @@ QtObject {
 
     readonly property bool showActiveWindow: true
     readonly property bool showClock: true
+    readonly property bool showAudio: true
 
     readonly property string clockFormat: "HH:mm"
 }

@@ -18,6 +18,7 @@ in
 
       # GTK / icon fallback
       adwaita-icon-theme
+      papirus-icon-theme
 
       # Thanh trạng thái và launcher
       waybar

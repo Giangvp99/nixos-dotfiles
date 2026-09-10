@@ -6,7 +6,7 @@
   imports = [
     ./packages.nix
     ./session.nix
-    ./waybar.nix
+    #    ./waybar.nix
     ./hyprlock.nix
     ./hypridle.nix
     ./hyprpaper.nix

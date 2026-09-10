@@ -1,10 +1,14 @@
 import QtQuick
 import QtQuick.Layouts
 
+import "../../config" as Config
 import "./widgets" as Widgets
 
 RowLayout {
-    spacing: 8
+    spacing:
+        Config.Config.barSpacing
 
-    Widgets.Workspaces {}
+    Widgets.CurrentWorkspace {}
+
+    Widgets.RunningApps {}
 }

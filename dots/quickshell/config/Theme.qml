@@ -15,6 +15,7 @@ QtObject {
     // Semantic
     readonly property color primary: "#89b4fa"
     readonly property color urgent: "#f38ba8"
+    readonly property color minimized: "#f9e2af"
 
     // Geometry
     readonly property int radiusSmall: 6
