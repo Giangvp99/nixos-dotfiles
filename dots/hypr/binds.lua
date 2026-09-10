@@ -11,7 +11,7 @@ hl.bind(mainMod .. " + " .. returnKey, hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(
-	mainMod .. " + M",
+	mainMod .. " + SHIFT + M",
 	hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
 )
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -26,7 +26,30 @@ hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + M", function()
+	local minimized = hl.get_workspace("special:minimized")
 
+	if minimized then
+		hl.dispatch(hl.dsp.window.move({
+			workspace = hl.get_active_workspace(),
+			window = "tag:minimized",
+		}))
+
+		hl.dispatch(hl.dsp.window.clear_tags({
+			window = "tag:minimized",
+		}))
+	else
+		hl.dispatch(hl.dsp.window.tag({
+			tag = "minimized",
+			window = hl.get_active_window(),
+		}))
+
+		hl.dispatch(hl.dsp.window.move({
+			workspace = "special:minimized",
+			follow = false,
+		}))
+	end
+end)
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do

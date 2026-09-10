@@ -1,0 +1,2 @@
+singleton HyprlandService 1.0 HyprlandService.qml
+singleton AudioService 1.0 AudioService.qml

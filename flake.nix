@@ -11,6 +11,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    quickshell = {
+      url = "github:quickshell-mirror/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,8 +66,7 @@
 
       checks.${system} = {
         formatting = treefmtEval.config.build.check self;
-        j4n9-hplaptop =
-          self.nixosConfigurations.j4n9-hplaptop.config.system.build.toplevel;
+        j4n9-hplaptop = self.nixosConfigurations.j4n9-hplaptop.config.system.build.toplevel;
       };
 
       nixosConfigurations = {
