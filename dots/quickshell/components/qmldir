@@ -1,3 +1,4 @@
+StatusText 1.0 StatusText.qml
 StyledText 1.0 StyledText.qml
 Surface 1.0 Surface.qml
 IconButton 1.0 IconButton.qml

@@ -10,9 +10,19 @@ RowLayout {
 
     spacing: Config.Config.barSpacing
 
+    Widgets.Wifi {}
+
+    Widgets.Battery {}
+    
+    Widgets.Brightness {}
+
     Widgets.Audio {}
+
+    Widgets.Date {}
 
     Widgets.Clock {
         visible: Config.Config.showClock
     }
+
+    Widgets.PowerMenu {}
 }

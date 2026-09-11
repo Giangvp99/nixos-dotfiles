@@ -1,11 +1,10 @@
 import QtQuick
-import QtQuick.Layouts
 
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
 
-Components.IconButton {
+Components.StatusText {
     id: root
 
     readonly property var workspace:
@@ -14,19 +13,25 @@ Components.IconButton {
     visible:
         workspace !== null
 
-    implicitWidth:
-        Config.Config.workspaceSize
+    implicitWidth: Config.Config.workspaceWidth
+    
+    icon:
+        workspaceIcon(
+            workspace
+            ? workspace.id
+            : 0
+        )
 
-    implicitHeight:
-        Config.Config.workspaceSize
+    text: ""
 
-    active: true
+    foreground:
+        Config.Theme.text
 
-    icon: {
-        if (!workspace)
-            return ""
+    iconColor:
+        Config.Theme.primary
 
-        switch (workspace.id) {
+    function workspaceIcon(id) {
+        switch (id) {
         case 1:
             return ""
 
@@ -40,7 +45,7 @@ Components.IconButton {
             return ""
 
         default:
-            return workspace.id.toString()
+            return "󰍹"
         }
     }
 }

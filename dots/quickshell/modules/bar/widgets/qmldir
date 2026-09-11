@@ -3,3 +3,8 @@ RunningApps 1.0 RunningApps.qml
 ActiveWindow 1.0 ActiveWindow.qml
 Clock 1.0 Clock.qml
 Audio 1.1 Audio.qml
+Brightness 1.0 Brightness.qml
+Wifi 1.0 Wifi.qml
+Date 1.0 Date.qml
+Battery 1.0 Battery.qml
+PowerMenu 1.0 PowerMenu.qml
