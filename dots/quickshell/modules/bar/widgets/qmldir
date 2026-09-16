@@ -8,3 +8,5 @@ Wifi 1.0 Wifi.qml
 Date 1.0 Date.qml
 Battery 1.0 Battery.qml
 PowerMenu 1.0 PowerMenu.qml
+Keyboard 1.0 Keyboard.qml
+ModeIndicator 1.0 ModeIndicator.qml

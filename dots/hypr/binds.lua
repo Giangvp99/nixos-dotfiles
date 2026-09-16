@@ -7,7 +7,7 @@ local menu = "fuzzel"
 local browser = "brave"
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
-hl.bind(mainMod .. " + " .. returnKey, hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + SHIFT + " .. returnKey, hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(
@@ -22,41 +22,137 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 -- hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 -- hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("fuzzel"))
 -- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
+-- hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
+-- hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+
+-- ============================================================================
+-- Minimize state
+-- ============================================================================
+
+-- ============================================================================
+-- Minimize / Restore
+-- ============================================================================
+
+local minimized_origin = nil
+
+local function workspace_selector(workspace)
+	if workspace == nil then
+		return nil
+	end
+
+	local name = workspace.name
+
+	if name == nil then
+		return nil
+	end
+
+	-- Named workspace:
+	--
+	-- mode-writing-primary
+	-- ->
+	-- name:mode-writing-primary
+	if not name:match("^%d+$") then
+		return "name:" .. name
+	end
+
+	-- Numeric workspace:
+	--
+	-- "1"
+	-- ->
+	-- "1"
+	return name
+end
+
 hl.bind(mainMod .. " + M", function()
-	local minimized = hl.get_workspace("special:minimized")
+	local minimized = hl.get_window("tag:minimized")
 
-	if minimized then
+	-- ========================================================================
+	-- RESTORE
+	-- ========================================================================
+
+	if minimized ~= nil then
+		-- Workspace gốc đã được lưu lúc minimize.
+		local target = minimized_origin
+
+		-- Fallback chỉ dùng khi state bị mất do reload config.
+		if target == nil then
+			target = workspace_selector(hl.get_active_workspace())
+		end
+
+		if target == nil then
+			return
+		end
+
+		-- Đưa window về đúng workspace gốc.
 		hl.dispatch(hl.dsp.window.move({
-			workspace = hl.get_active_workspace(),
-			window = "tag:minimized",
-		}))
-
-		hl.dispatch(hl.dsp.window.clear_tags({
-			window = "tag:minimized",
-		}))
-	else
-		hl.dispatch(hl.dsp.window.tag({
-			tag = "minimized",
-			window = hl.get_active_window(),
-		}))
-
-		hl.dispatch(hl.dsp.window.move({
-			workspace = "special:minimized",
+			window = minimized,
+			workspace = target,
 			follow = false,
 		}))
+
+		-- Chuyển người dùng về workspace gốc.
+		hl.dispatch(hl.dsp.focus({
+			workspace = target,
+		}))
+
+		-- Focus window vừa restore.
+		hl.dispatch(hl.dsp.focus({
+			window = minimized,
+		}))
+
+		-- Bỏ tag minimize.
+		hl.dispatch(hl.dsp.window.clear_tags({
+			window = minimized,
+		}))
+
+		minimized_origin = nil
+
+		return
 	end
+
+	-- ========================================================================
+	-- MINIMIZE
+	-- ========================================================================
+
+	local active_window = hl.get_active_window()
+
+	local active_workspace = hl.get_active_workspace()
+
+	if active_window == nil or active_workspace == nil then
+		return
+	end
+
+	-- QUAN TRỌNG:
+	-- lưu workspace TRƯỚC KHI move window.
+	minimized_origin = workspace_selector(active_workspace)
+
+	-- Ví dụ:
+	--
+	-- mode-writing-primary
+	-- ->
+	-- name:mode-writing-primary
+
+	hl.dispatch(hl.dsp.window.tag({
+		window = active_window,
+		tag = "minimized",
+	}))
+
+	hl.dispatch(hl.dsp.window.move({
+		window = active_window,
+		workspace = "special:minimized",
+		follow = false,
+	}))
 end)
+
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
-for i = 1, 10 do
-	local key = i % 10 -- 10 maps to key 0
-	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
-end
+-- for i = 1, 10 do
+-- 	local key = i % 10 -- 10 maps to key 0
+-- 	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
+-- 	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+-- end
 
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))

@@ -7,5 +7,5 @@ import "./widgets" as Widgets
 RowLayout {
     visible: Config.Config.showActiveWindow
 
-    Widgets.ActiveWindow {}
+    //Widgets.ActiveWindow {}
 }

@@ -24,5 +24,7 @@ RowLayout {
         visible: Config.Config.showClock
     }
 
+    Widgets.Keyboard {}
+
     Widgets.PowerMenu {}
 }

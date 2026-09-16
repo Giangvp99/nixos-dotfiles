@@ -42,7 +42,13 @@ hl.config({
 	},
 	-- See https://wiki.hypr.land/Configuring/Layouts/Scrolling-Layout/ for more
 	scrolling = {
+		column_width = 1.0,
 		fullscreen_on_one_column = true,
+		follow_focus = true,
+		focus_fit_method = 0,
+		wrap_focus = true,
+		wrap_swapcol = true,
+		direction = "right",
 	},
 
 	xwayland = {

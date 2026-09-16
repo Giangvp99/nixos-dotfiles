@@ -18,5 +18,7 @@ QtObject {
     readonly property bool showAudio: true
     readonly property int batteryWidth: 72
 
+    readonly property int keyboardWidth: 42
+
     readonly property string clockFormat: "HH:mm"
 }

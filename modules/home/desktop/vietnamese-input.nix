@@ -6,6 +6,8 @@
 
 let
   cfg = config.my.desktop.vietnameseInput;
+
+  fcitx5-status = pkgs.callPackage ./fcitx5-status { };
 in
 {
   options = {
@@ -23,6 +25,7 @@ in
         addons = with pkgs; [
           qt6Packages.fcitx5-unikey
           fcitx5-gtk
+          fcitx5-status
         ];
       };
     };
@@ -91,7 +94,7 @@ in
       # Force Enabled Addons
       EnabledAddons=
       # Force Disabled Addons
-      DisabledAddons=
+      DisabledAddons=classicui
       # Preload input method to be used by default
       PreloadInputMethod=True
       # Allow input method in the password field
