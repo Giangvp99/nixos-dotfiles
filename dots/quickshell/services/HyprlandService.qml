@@ -3,9 +3,18 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Io
 
 QtObject {
     id: root
+
+    property IpcHandler ipcHandler: IpcHandler {
+        target: "hyprlandService"
+
+        function refreshOrder(): void {
+            Hyprland.refreshToplevels()
+        }
+    }
 
     readonly property var workspaces:
         Hyprland.workspaces
@@ -50,9 +59,35 @@ QtObject {
      *
      * Không lấy window từ các workspace bình thường khác.
      */
+
+     function windowX(toplevel) {
+        if (
+            !toplevel
+            || !toplevel.lastIpcObject
+            || !toplevel.lastIpcObject.at
+        ) {
+            return 0
+        }
+
+        return toplevel.lastIpcObject.at[0]
+    }
+
+    function windowY(toplevel) {
+        if (
+            !toplevel
+            || !toplevel.lastIpcObject
+            || !toplevel.lastIpcObject.at
+        ) {
+            return 0
+        }
+
+        return toplevel.lastIpcObject.at[1]
+    }
+
     readonly property ScriptModel visibleToplevels: ScriptModel {
         values: {
-            const result = []
+            const normalWindows = []
+            const minimizedWindows = []
 
             const current =
                 root.focusedWorkspace
@@ -60,9 +95,11 @@ QtObject {
             const minimized =
                 root.minimizedWorkspace
 
-            /*
-             * Window của workspace hiện tại.
-             */
+
+            // ================================================================
+            // Current workspace
+            // ================================================================
+
             if (
                 current
                 && current.toplevels
@@ -79,16 +116,48 @@ QtObject {
                         windows[i]
 
                     if (window)
-                        result.push(window)
+                        normalWindows.push(window)
                 }
             }
 
-            /*
-             * Window đã minimize.
-             *
-             * Không thêm lần nữa nếu vì lý do nào đó
-             * focusedWorkspace chính là special:minimized.
-             */
+
+            // ================================================================
+            // Sort theo layout thực tế
+            // ================================================================
+            //
+            // Scrolling layout:
+            //
+            //      A       B       C
+            //      x=0     x=1280  x=2560
+            //
+            // Nếu swap B ↔ C thì tọa độ thay đổi.
+            // Widget vì thế cũng đổi thứ tự.
+            //
+            // Nếu nhiều window cùng một column,
+            // sort tiếp theo Y.
+            // ================================================================
+
+            normalWindows.sort(function(a, b) {
+                const ax =
+                    root.windowX(a)
+
+                const bx =
+                    root.windowX(b)
+
+                if (ax !== bx)
+                    return ax - bx
+
+                return (
+                    root.windowY(a)
+                    - root.windowY(b)
+                )
+            })
+
+
+            // ================================================================
+            // Minimized windows
+            // ================================================================
+
             if (
                 minimized
                 && minimized !== current
@@ -106,11 +175,15 @@ QtObject {
                         windows[i]
 
                     if (window)
-                        result.push(window)
+                        minimizedWindows.push(window)
                 }
             }
 
-            return result
+
+            // Minimized luôn nằm sau các window của Mode hiện tại.
+            return normalWindows.concat(
+                minimizedWindows
+            )
         }
     }
 

@@ -6,3 +6,4 @@ singleton BatteryService 1.0 BatteryService.qml
 singleton PowerService 1.0 PowerService.qml
 singleton InputMethodService 1.0 InputMethodService.qml
 singleton ModeService 1.0 ModeService.qml
+singleton AppService 1.0 AppService.qml

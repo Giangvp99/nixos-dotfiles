@@ -1,5 +1,6 @@
 #include "status.h"
 
+#include <fcitx/addonfactory.h>
 #include <fcitx/addonmanager.h>
 #include <fcitx/event.h>
 #include <fcitx/instance.h>
@@ -8,6 +9,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <system_error>
 
 namespace fcitx {
 
@@ -20,13 +22,9 @@ StatusAddon::StatusAddon(Instance *instance)
             EventWatcherPhase::Default,
             [this](Event &event) {
                 auto &activated =
-                    static_cast<InputMethodActivatedEvent &>(
-                        event
-                    );
+                    static_cast<InputMethodActivatedEvent &>(event);
 
-                update(
-                    activated.name()
-                );
+                update(activated.name());
             }
         );
 }
@@ -41,10 +39,6 @@ void StatusAddon::update(
     } else if (inputMethod == "unikey") {
         language = "vi";
     } else {
-        /*
-         * Không ghi state sai nếu sau này bạn thêm
-         * input method khác.
-         */
         return;
     }
 
@@ -62,63 +56,66 @@ void StatusAddon::update(
         std::filesystem::path(runtimeDir)
         / "fcitx5-language";
 
-    /*
-     * Ghi atomically:
-     *
-     *   temp file
-     *      ↓
-     *   rename
-     *
-     * Quickshell sẽ không bao giờ đọc phải
-     * file đang ghi dở.
-     */
     const std::filesystem::path tempPath =
         path.string() + ".tmp";
 
     {
         std::ofstream file(
             tempPath,
-            std::ios::out
-            | std::ios::trunc
+            std::ios::out | std::ios::trunc
         );
 
-        if (!file)
+        if (!file) {
             return;
+        }
 
         file << language << '\n';
-
         file.flush();
 
-        if (!file)
+        if (!file) {
             return;
+        }
     }
 
-    std::error_code error;
+    std::error_code ec;
 
     std::filesystem::rename(
         tempPath,
         path,
-        error
+        ec
     );
 
-    if (error) {
+    if (ec) {
         std::filesystem::remove(
-            tempPath
+            tempPath,
+            ec
         );
     }
 }
 
-AddonInstance *
-StatusAddonFactory::create(
-    AddonManager *manager
-) {
-    return new StatusAddon(
-        manager->instance()
-    );
-}
+
+/*
+ * Factory
+ *
+ * Giữ factory trong .cpp giống cách các addon
+ * chính thức của Fcitx5 triển khai.
+ */
+class StatusAddonFactory final
+    : public AddonFactory {
+public:
+    AddonInstance *create(
+        AddonManager *manager
+    ) override {
+        return new StatusAddon(
+            manager->instance()
+        );
+    }
+};
 
 } // namespace fcitx
 
-FCITX_ADDON_FACTORY(
+
+FCITX_ADDON_FACTORY_V2(
+    status,
     fcitx::StatusAddonFactory
-)
+);

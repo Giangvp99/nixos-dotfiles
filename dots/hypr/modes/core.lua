@@ -413,7 +413,14 @@ function M.swap_app(direction)
 		return
 	end
 
+	-- Đổi column thực tế trong scrolling layout.
 	hl.dispatch(hl.dsp.layout("swapcol " .. direction))
+
+	-- QuickShell cần refresh IPC metadata để nhận tọa độ mới.
+	--
+	-- Không polling.
+	-- Chỉ refresh đúng khi người dùng vừa reorder window.
+	hl.exec_cmd("qs ipc call hyprlandService refreshOrder")
 end
 
 -- ============================================================================

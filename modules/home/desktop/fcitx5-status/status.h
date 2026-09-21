@@ -26,12 +26,4 @@ private:
     > inputMethodActivated_;
 };
 
-class StatusAddonFactory final
-    : public AddonFactory {
-public:
-    AddonInstance *create(
-        AddonManager *manager
-    ) override;
-};
-
 } // namespace fcitx

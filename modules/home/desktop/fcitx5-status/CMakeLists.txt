@@ -6,15 +6,12 @@ project(
     LANGUAGES CXX
 )
 
-# Fcitx 5.1.19 headers sử dụng C++20 APIs,
-# ví dụ std::string_view::starts_with/ends_with.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(
-    Fcitx5Core
-    REQUIRED
+    Fcitx5Core REQUIRED
 )
 
 add_library(
@@ -42,15 +39,13 @@ configure_file(
 )
 
 install(
-    TARGETS
-    fcitx5-status
-    LIBRARY DESTINATION
-    lib/fcitx5
+    TARGETS fcitx5-status
+    LIBRARY DESTINATION lib/fcitx5
 )
 
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/fcitx5-status.conf
+        ${CMAKE_CURRENT_BINARY_DIR}/fcitx5-status.conf
     DESTINATION
-    share/fcitx5/addon
+        share/fcitx5/addon
 )
