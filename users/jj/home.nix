@@ -6,14 +6,12 @@
     inputs.nixvim.homeModules.nixvim
 
     ../../profiles/home/common.nix
-    ../../profiles/home/desktop.nix
-    ../../profiles/home/plasma.nix
     ../../profiles/home/hyprland.nix
   ];
 
   home = {
-    username = "ntgiang";
-    homeDirectory = "/home/ntgiang";
+    username = "jj";
+    homeDirectory = "/home/jj";
     stateVersion = "26.05";
   };
 

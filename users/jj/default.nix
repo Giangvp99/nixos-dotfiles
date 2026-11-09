@@ -5,9 +5,9 @@
 }:
 
 {
-  users.users.ntgiang = {
+  users.users.jj = {
     isNormalUser = true;
-    description = "Nguyen Truong Giang";
+    description = "JJ";
 
     extraGroups = [
       "wheel"
@@ -33,7 +33,7 @@
       hostName = config.networking.hostName;
     };
 
-    users.ntgiang = {
+    users.jj = {
       imports = [
         inputs.plasma-manager.homeModules.plasma-manager
         ./home.nix

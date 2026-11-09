@@ -66,16 +66,15 @@
 
       checks.${system} = {
         formatting = treefmtEval.config.build.check self;
-        j4n9-hplaptop = self.nixosConfigurations.j4n9-hplaptop.config.system.build.toplevel;
       };
 
       nixosConfigurations = {
-        j4n9-hplaptop = mkHost {
-          hostname = "j4n9-hplaptop";
+	j4n9-proxmox = mkHost {
+          hostname = "j4n9-proxmox";
           inherit system;
 
           users = [
-            ./users/ntgiang
+            ./users/jj
           ];
 
           extraModules = [
