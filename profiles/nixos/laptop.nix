@@ -6,6 +6,7 @@
     ../../modules/nixos/hardware/firmware.nix
     ../../modules/nixos/services/printing.nix
     ../../modules/nixos/scripts/touchpadAutoToggle.nix
+    ../../modules/nixos/desktop/fonts.nix
   ];
 
   my = {
@@ -24,7 +25,7 @@
 
       firmware.enable = true;
     };
-
+    desktop.fonts.enable = true;
     scripts.touchpadAutoToggle.enable = true;
 
     # services.printing.enable = true;

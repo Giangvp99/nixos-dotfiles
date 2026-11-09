@@ -1,0 +1,8 @@
+[Addon]
+Name=Quickshell Input Method Status
+Category=Module
+Version=1.0.0
+Library=fcitx5-status
+Type=SharedLibrary
+OnDemand=False
+Configurable=False

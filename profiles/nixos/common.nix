@@ -16,9 +16,9 @@
     ../../modules/nixos/services/backup.nix
     ../../modules/nixos/services/maintenance.nix
     ../../modules/nixos/services/scripts.nix
-    ../../modules/nixos/services/protonvpn.nix
+    # ../../modules/nixos/services/protonvpn.nix
     #    ../../modules/nixos/virtualization/vmware.nix
-    ../../modules/nixos/virtualization/libvirt.nix
+    # ../../modules/nixos/virtualization/libvirt.nix
   ];
 
   my = {
@@ -31,7 +31,7 @@
         enable = true;
         trustedUsers = [
           "root"
-          "ntgiang"
+          "jj"
         ];
       };
       packages.enable = true;
@@ -69,7 +69,7 @@
         updateCheckCalendar = "Sun 10:00";
       };
 
-      protonvpn.enable = true;
+      # protonvpn.enable = true;
 
       scripts = {
         enable = true;
@@ -77,9 +77,9 @@
       };
     };
     # virtualization.vmware.enable = true;
-    virtualization.libvirt = {
-      enable = true;
-      users = [ "ntgiang" ];
-    };
+    # virtualization.libvirt = {
+    #   enable = true;
+    #   users = [ "jj" ];
+    # };
   };
 }

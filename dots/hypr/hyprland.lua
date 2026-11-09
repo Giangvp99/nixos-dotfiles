@@ -15,6 +15,7 @@ require("config.laf")
 
 require("rules")
 require("binds")
+require("modes")
 require("permissions")
-
 require("autostart")
+require("modules.float-terminal")
