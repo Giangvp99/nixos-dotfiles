@@ -71,3 +71,8 @@ Xem thêm:
 - docs/ARCHITECTURE.md
 - docs/DEVELOPMENT.md
 - docs/NEW_FEATURE.md
+
+Dashboard (giai đoạn 4): xem [modules/dashboard/README.md](modules/dashboard/README.md).
+Mở từ nút đầu topbar hoặc `qs ipc call dashboard toggle`.
+
+Trải nghiệm giữa các overlay (giai đoạn 5): [docs/PHASE5.md](docs/PHASE5.md).

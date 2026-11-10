@@ -38,6 +38,24 @@ hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
 -- ============================================================================
 
 local minimized_origin = nil
+local origin_prefix = "minimized-from-"
+
+local function origin_tag(window)
+	local tags = window.tags or {}
+	if type(tags) == "string" then
+		local list = {}
+		for tag in tags:gmatch("[^,%s]+") do
+			table.insert(list, tag)
+		end
+		tags = list
+	end
+	for _, tag in pairs(tags) do
+		if type(tag) == "string" and tag:sub(1, #origin_prefix) == origin_prefix then
+			return tag
+		end
+	end
+	return nil
+end
 
 local function workspace_selector(workspace)
 	if workspace == nil then
@@ -76,7 +94,8 @@ hl.bind(mainMod .. " + M", function()
 
 	if minimized ~= nil then
 		-- Workspace gốc đã được lưu lúc minimize.
-		local target = minimized_origin
+		local marker = origin_tag(minimized)
+		local target = marker and marker:sub(#origin_prefix + 1) or minimized_origin
 
 		-- Fallback chỉ dùng khi state bị mất do reload config.
 		if target == nil then
@@ -105,10 +124,14 @@ hl.bind(mainMod .. " + M", function()
 		}))
 
 		-- Bỏ tag minimize.
-		hl.dispatch(hl.dsp.window.clear_tags({
+		hl.dispatch(hl.dsp.window.tag({
 			window = minimized,
+			tag = "-minimized",
 		}))
 
+		if marker then
+			hl.dispatch(hl.dsp.window.tag({ window = minimized, tag = "-" .. marker }))
+		end
 		minimized_origin = nil
 
 		return
@@ -138,7 +161,12 @@ hl.bind(mainMod .. " + M", function()
 
 	hl.dispatch(hl.dsp.window.tag({
 		window = active_window,
-		tag = "minimized",
+		tag = "+minimized",
+	}))
+
+	hl.dispatch(hl.dsp.window.tag({
+		window = active_window,
+		tag = "+" .. origin_prefix .. minimized_origin,
 	}))
 
 	hl.dispatch(hl.dsp.window.move({

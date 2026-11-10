@@ -42,3 +42,8 @@ Nếu property thuộc appearance, ưu tiên Theme.qml.
 Nếu property thuộc animation, dùng Animations.qml.
 
 Nếu property thuộc behavior/layout, dùng Config.qml.
+
+`notificationsEnabled` defaults to false. NotificationHost allows an explicitly
+approved process-scoped trial through IPC without changing that default; see
+`modules/notifications/README.md` for the current owner, session opt-in and rollback.
+This flag is not a safe hot daemon switch.

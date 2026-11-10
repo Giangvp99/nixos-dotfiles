@@ -1,0 +1,853 @@
+{
+  "host": "j4n9-proxmox",
+  "date": "2026-11-10",
+  "notes": [
+    "RSS/PSS/Private_Dirty in KiB; CPU percent of one core during idle sample.",
+    "Initial cycle probes use 5s idle samples; reload probes use 2s.",
+    "after_gc_plus_100 includes one earlier diagnostic GC; GC runs only in temporary probe.",
+    "Initial probes used temporary instrumentation; maintained tool adds version/source metadata."
+  ],
+  "reports": {
+    "offscreen_420_cycles": [
+      {
+        "rss_kib": 66184,
+        "pss_kib": 37049,
+        "private_dirty_kib": 13188,
+        "cpu_percent_one_core": 0.0,
+        "label": "idle",
+        "content_created": 0,
+        "content_destroyed": 0,
+        "clock_created": 0,
+        "clock_destroyed": 0,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 0,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89980,
+        "pss_kib": 53033,
+        "private_dirty_kib": 25012,
+        "cpu_percent_one_core": 0.4,
+        "label": "after_20",
+        "content_created": 20,
+        "content_destroyed": 20,
+        "clock_created": 20,
+        "clock_destroyed": 20,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 20,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89852,
+        "pss_kib": 52904,
+        "private_dirty_kib": 24884,
+        "cpu_percent_one_core": 0.6,
+        "label": "after_120",
+        "content_created": 120,
+        "content_destroyed": 120,
+        "clock_created": 120,
+        "clock_destroyed": 120,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89808,
+        "pss_kib": 52861,
+        "private_dirty_kib": 24840,
+        "cpu_percent_one_core": 0.4,
+        "label": "after_220",
+        "content_created": 220,
+        "content_destroyed": 220,
+        "clock_created": 220,
+        "clock_destroyed": 220,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89736,
+        "pss_kib": 43191,
+        "private_dirty_kib": 24768,
+        "cpu_percent_one_core": 0.2,
+        "label": "after_320",
+        "content_created": 320,
+        "content_destroyed": 320,
+        "clock_created": 320,
+        "clock_destroyed": 320,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89336,
+        "pss_kib": 42791,
+        "private_dirty_kib": 24368,
+        "cpu_percent_one_core": 0.4,
+        "label": "after_diagnostic_gc",
+        "content_created": 320,
+        "content_destroyed": 320,
+        "clock_created": 320,
+        "clock_destroyed": 320,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89948,
+        "pss_kib": 43403,
+        "private_dirty_kib": 24980,
+        "cpu_percent_one_core": 0.4,
+        "label": "after_gc_plus_100",
+        "content_created": 420,
+        "content_destroyed": 420,
+        "clock_created": 420,
+        "clock_destroyed": 420,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 89576,
+        "pss_kib": 42656,
+        "private_dirty_kib": 24608,
+        "cpu_percent_one_core": 0.2,
+        "label": "after_second_diagnostic_gc",
+        "content_created": 420,
+        "content_destroyed": 420,
+        "clock_created": 420,
+        "clock_destroyed": 420,
+        "state": {
+          "pid": 7430,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      }
+    ],
+    "wayland_320_cycles": [
+      {
+        "rss_kib": 111876,
+        "pss_kib": 43026,
+        "private_dirty_kib": 20660,
+        "cpu_percent_one_core": 0.0,
+        "label": "idle",
+        "content_created": 0,
+        "content_destroyed": 0,
+        "clock_created": 0,
+        "clock_destroyed": 0,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 0,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 193872,
+        "pss_kib": 87047,
+        "private_dirty_kib": 53200,
+        "cpu_percent_one_core": 0.8,
+        "label": "after_20",
+        "content_created": 20,
+        "content_destroyed": 20,
+        "clock_created": 20,
+        "clock_destroyed": 20,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 20,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 187824,
+        "pss_kib": 90598,
+        "private_dirty_kib": 47152,
+        "cpu_percent_one_core": 0.2,
+        "label": "after_120",
+        "content_created": 120,
+        "content_destroyed": 120,
+        "clock_created": 120,
+        "clock_destroyed": 120,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 194800,
+        "pss_kib": 97574,
+        "private_dirty_kib": 54128,
+        "cpu_percent_one_core": 0.0,
+        "label": "after_220",
+        "content_created": 220,
+        "content_destroyed": 220,
+        "clock_created": 220,
+        "clock_destroyed": 220,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 173156,
+        "pss_kib": 75930,
+        "private_dirty_kib": 32484,
+        "cpu_percent_one_core": 0.0,
+        "label": "after_diagnostic_gc",
+        "content_created": 220,
+        "content_destroyed": 220,
+        "clock_created": 220,
+        "clock_destroyed": 220,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 210556,
+        "pss_kib": 113330,
+        "private_dirty_kib": 69884,
+        "cpu_percent_one_core": 0.2,
+        "label": "after_gc_plus_100",
+        "content_created": 320,
+        "content_destroyed": 320,
+        "clock_created": 320,
+        "clock_destroyed": 320,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      },
+      {
+        "rss_kib": 188224,
+        "pss_kib": 90998,
+        "private_dirty_kib": 47552,
+        "cpu_percent_one_core": 0.0,
+        "label": "after_second_diagnostic_gc",
+        "content_created": 320,
+        "content_destroyed": 320,
+        "clock_created": 320,
+        "clock_destroyed": 320,
+        "state": {
+          "pid": 7552,
+          "running": false,
+          "completed": 100,
+          "opened": false,
+          "loaded": false
+        }
+      }
+    ],
+    "software_12_reloads": {
+      "host": "j4n9-proxmox",
+      "backend": "wayland",
+      "interval_ms": 120,
+      "samples": [
+        {
+          "rss_kib": 68856,
+          "pss_kib": 38730,
+          "private_dirty_kib": 14116,
+          "cpu_percent_one_core": 0.0,
+          "label": "idle",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 0,
+          "content_destroyed": 0,
+          "clock_created": 0,
+          "clock_destroyed": 0
+        },
+        {
+          "rss_kib": 89808,
+          "pss_kib": 51264,
+          "private_dirty_kib": 21864,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_5_cycles",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 5,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 5,
+          "content_destroyed": 5,
+          "clock_created": 5,
+          "clock_destroyed": 5
+        },
+        {
+          "rss_kib": 94624,
+          "pss_kib": 55436,
+          "private_dirty_kib": 25624,
+          "cpu_percent_one_core": 0.99,
+          "label": "after_reload_1",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 7,
+          "content_destroyed": 7,
+          "clock_created": 7,
+          "clock_destroyed": 7
+        },
+        {
+          "rss_kib": 95736,
+          "pss_kib": 56548,
+          "private_dirty_kib": 26736,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_2",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 9,
+          "content_destroyed": 9,
+          "clock_created": 9,
+          "clock_destroyed": 9
+        },
+        {
+          "rss_kib": 94660,
+          "pss_kib": 55472,
+          "private_dirty_kib": 25660,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_3",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 11,
+          "content_destroyed": 11,
+          "clock_created": 11,
+          "clock_destroyed": 11
+        },
+        {
+          "rss_kib": 95708,
+          "pss_kib": 56520,
+          "private_dirty_kib": 26708,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_4",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 13,
+          "content_destroyed": 13,
+          "clock_created": 13,
+          "clock_destroyed": 13
+        },
+        {
+          "rss_kib": 95380,
+          "pss_kib": 56192,
+          "private_dirty_kib": 26380,
+          "cpu_percent_one_core": 1.0,
+          "label": "after_reload_5",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 15,
+          "content_destroyed": 15,
+          "clock_created": 15,
+          "clock_destroyed": 15
+        },
+        {
+          "rss_kib": 94980,
+          "pss_kib": 55792,
+          "private_dirty_kib": 25980,
+          "cpu_percent_one_core": 0.99,
+          "label": "after_reload_6",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 17,
+          "content_destroyed": 17,
+          "clock_created": 17,
+          "clock_destroyed": 17
+        },
+        {
+          "rss_kib": 95496,
+          "pss_kib": 56250,
+          "private_dirty_kib": 26496,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_7",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 19,
+          "content_destroyed": 19,
+          "clock_created": 19,
+          "clock_destroyed": 19
+        },
+        {
+          "rss_kib": 95728,
+          "pss_kib": 56540,
+          "private_dirty_kib": 26728,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_8",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 21,
+          "content_destroyed": 21,
+          "clock_created": 21,
+          "clock_destroyed": 21
+        },
+        {
+          "rss_kib": 95540,
+          "pss_kib": 56352,
+          "private_dirty_kib": 26540,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_9",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 23,
+          "content_destroyed": 23,
+          "clock_created": 23,
+          "clock_destroyed": 23
+        },
+        {
+          "rss_kib": 95268,
+          "pss_kib": 56080,
+          "private_dirty_kib": 26268,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_10",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 25,
+          "content_destroyed": 25,
+          "clock_created": 25,
+          "clock_destroyed": 25
+        },
+        {
+          "rss_kib": 95528,
+          "pss_kib": 56340,
+          "private_dirty_kib": 26528,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_11",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 27,
+          "content_destroyed": 27,
+          "clock_created": 27,
+          "clock_destroyed": 27
+        },
+        {
+          "rss_kib": 95340,
+          "pss_kib": 56152,
+          "private_dirty_kib": 26340,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_reload_12",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 29,
+          "content_destroyed": 29,
+          "clock_created": 29,
+          "clock_destroyed": 29
+        },
+        {
+          "rss_kib": 95232,
+          "pss_kib": 56044,
+          "private_dirty_kib": 26232,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_diagnostic_gc",
+          "state": {
+            "pid": 8528,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 29,
+          "content_destroyed": 29,
+          "clock_created": 29,
+          "clock_destroyed": 29
+        }
+      ]
+    },
+    "default_12_reloads": {
+      "host": "j4n9-proxmox",
+      "backend": "wayland",
+      "interval_ms": 120,
+      "samples": [
+        {
+          "rss_kib": 111496,
+          "pss_kib": 51355,
+          "private_dirty_kib": 20472,
+          "cpu_percent_one_core": 0.0,
+          "label": "idle",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 0,
+          "content_destroyed": 0,
+          "clock_created": 0,
+          "clock_destroyed": 0
+        },
+        {
+          "rss_kib": 232484,
+          "pss_kib": 135325,
+          "private_dirty_kib": 91888,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_5_cycles",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 5,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 5,
+          "content_destroyed": 5,
+          "clock_created": 5,
+          "clock_destroyed": 5
+        },
+        {
+          "rss_kib": 250392,
+          "pss_kib": 152597,
+          "private_dirty_kib": 108804,
+          "cpu_percent_one_core": 1.0,
+          "label": "after_reload_1",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 7,
+          "content_destroyed": 7,
+          "clock_created": 7,
+          "clock_destroyed": 7
+        },
+        {
+          "rss_kib": 287252,
+          "pss_kib": 189457,
+          "private_dirty_kib": 145664,
+          "cpu_percent_one_core": 0.49,
+          "label": "after_reload_2",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 9,
+          "content_destroyed": 9,
+          "clock_created": 9,
+          "clock_destroyed": 9
+        },
+        {
+          "rss_kib": 261404,
+          "pss_kib": 163609,
+          "private_dirty_kib": 119816,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_3",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 11,
+          "content_destroyed": 11,
+          "clock_created": 11,
+          "clock_destroyed": 11
+        },
+        {
+          "rss_kib": 271928,
+          "pss_kib": 174133,
+          "private_dirty_kib": 130340,
+          "cpu_percent_one_core": 1.0,
+          "label": "after_reload_4",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 13,
+          "content_destroyed": 13,
+          "clock_created": 13,
+          "clock_destroyed": 13
+        },
+        {
+          "rss_kib": 267060,
+          "pss_kib": 169265,
+          "private_dirty_kib": 125472,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_5",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 15,
+          "content_destroyed": 15,
+          "clock_created": 15,
+          "clock_destroyed": 15
+        },
+        {
+          "rss_kib": 267708,
+          "pss_kib": 169913,
+          "private_dirty_kib": 126120,
+          "cpu_percent_one_core": 0.99,
+          "label": "after_reload_6",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 17,
+          "content_destroyed": 17,
+          "clock_created": 17,
+          "clock_destroyed": 17
+        },
+        {
+          "rss_kib": 277120,
+          "pss_kib": 179325,
+          "private_dirty_kib": 135532,
+          "cpu_percent_one_core": 1.0,
+          "label": "after_reload_7",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 19,
+          "content_destroyed": 19,
+          "clock_created": 19,
+          "clock_destroyed": 19
+        },
+        {
+          "rss_kib": 272740,
+          "pss_kib": 174945,
+          "private_dirty_kib": 131152,
+          "cpu_percent_one_core": 0.49,
+          "label": "after_reload_8",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 21,
+          "content_destroyed": 21,
+          "clock_created": 21,
+          "clock_destroyed": 21
+        },
+        {
+          "rss_kib": 301420,
+          "pss_kib": 203625,
+          "private_dirty_kib": 159832,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_9",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 23,
+          "content_destroyed": 23,
+          "clock_created": 23,
+          "clock_destroyed": 23
+        },
+        {
+          "rss_kib": 262096,
+          "pss_kib": 164301,
+          "private_dirty_kib": 120508,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_10",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 25,
+          "content_destroyed": 25,
+          "clock_created": 25,
+          "clock_destroyed": 25
+        },
+        {
+          "rss_kib": 262316,
+          "pss_kib": 164521,
+          "private_dirty_kib": 120728,
+          "cpu_percent_one_core": 0.5,
+          "label": "after_reload_11",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 27,
+          "content_destroyed": 27,
+          "clock_created": 27,
+          "clock_destroyed": 27
+        },
+        {
+          "rss_kib": 265072,
+          "pss_kib": 167277,
+          "private_dirty_kib": 123484,
+          "cpu_percent_one_core": 1.0,
+          "label": "after_reload_12",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 29,
+          "content_destroyed": 29,
+          "clock_created": 29,
+          "clock_destroyed": 29
+        },
+        {
+          "rss_kib": 256608,
+          "pss_kib": 158813,
+          "private_dirty_kib": 115020,
+          "cpu_percent_one_core": 0.0,
+          "label": "after_diagnostic_gc",
+          "state": {
+            "pid": 8754,
+            "running": false,
+            "completed": 0,
+            "opened": false,
+            "loaded": false
+          },
+          "content_created": 29,
+          "content_destroyed": 29,
+          "clock_created": 29,
+          "clock_destroyed": 29
+        }
+      ],
+      "idle_seconds": 2.0,
+      "batches": [
+        5
+      ],
+      "reloads": 12,
+      "diagnostic_gc": true,
+      "quick_backend": "default",
+      "qs_version": "Quickshell 0.3.1 (revision 2d3b3e9c70ef380dff751b61d334dc88df016c29, distributed by Official-Nix-Flake)",
+      "source_sha256": {
+        "modules/dashboard/Dashboard.qml": "f75eb4734e4d6eb7c053916c3b8226ff243a1f884f75846c48e291fcee15f595",
+        "modules/dashboard/DashboardContent.qml": "810607abc28dd8c9e7b9076cbbd5e12aef000493dff1a406b9904c9c972627a8",
+        "components/MonthCalendar.qml": "240d9f6fb5770fe6f677424f05e883ab200ec51144074218db352fd97d375b92"
+      }
+    }
+  }
+}

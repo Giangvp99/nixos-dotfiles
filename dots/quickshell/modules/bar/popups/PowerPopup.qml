@@ -1,206 +1,140 @@
 import QtQuick
 import QtQuick.Layouts
 
-import Quickshell
-
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
 
-PopupWindow {
+BarPopup {
     id: root
 
-    property Item anchorItem
+    preferredWidth: 220
+    preferredHeight: content.implicitHeight + Config.Theme.popupPadding * 2
 
-    width: 220
-    height: content.implicitHeight + 24
-
-    visible: false
-    grabFocus: true
-
-    color: "transparent"
-
-    anchor {
-        item:
-            root.anchorItem
-
-        edges:
-            Edges.Bottom
-            | Edges.Right
-
-        gravity:
-            Edges.Bottom
-            | Edges.Left
-
-        margins.bottom: 8
-
-        adjustment:
-            PopupAdjustment.Slide
-            | PopupAdjustment.Flip
+    initialFocusItem: lockAction
+    function moveActionFocus(delta) {
+        const actions = [lockAction, logoutAction, rebootAction, shutdownAction]
+        const current = actions.findIndex(action => action.activeFocus)
+        const index = current < 0 ? (delta > 0 ? 0 : actions.length - 1)
+            : (current + delta + actions.length) % actions.length
+        const next = actions[index]
+        next.forceActiveFocus()
+        scroll.contentY = Math.max(0, Math.min(next.y, scroll.contentHeight - scroll.height))
     }
 
-    Rectangle {
+    function cycleFocus(delta) { moveActionFocus(delta) }
+
+    Connections {
+        target: root
+        function onVisibleChanged() { if (root.visible) scroll.contentY = 0 }
+    }
+
+    Components.Surface {
+        id: popupSurface
+        panel: true
+        focus: true
+        Keys.onDownPressed: root.moveActionFocus(1)
+        Keys.onUpPressed: root.moveActionFocus(-1)
+        Keys.onTabPressed: root.moveActionFocus(1)
+        Keys.onBacktabPressed: root.moveActionFocus(-1)
+        Keys.onEscapePressed: root.close(true)
         anchors.fill: parent
 
-        color:
-            Config.Theme.background
+        Flickable {
+            id: scroll
+            anchors.fill: parent
+            anchors.margins: Config.Theme.popupPadding
+            contentWidth: width
+            contentHeight: content.implicitHeight
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
 
-        radius:
-            Config.Theme.radiusMedium
+            ColumnLayout {
+                id: content
+                width: scroll.width
 
-        border.width: 1
-        border.color:
-            Config.Theme.surface
+                spacing: Config.Theme.controlSpacing
 
-        ColumnLayout {
-            id: content
+                Components.StyledText {
+                    Layout.fillWidth: true
 
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-                margins: 12
-            }
+                    text: "Session"
+                    Layout.preferredHeight: Config.Theme.popupHeaderHeight
 
-            spacing: 6
+                    font.weight: Config.Theme.emphasisFontWeight
 
-            Components.StyledText {
-                Layout.fillWidth: true
-
-                text: "Session"
-
-                font.bold: true
-
-                font.pixelSize:
-                    Config.Theme.fontLarge
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: 1
-
-                color:
-                    Config.Theme.surface
-            }
-
-            PowerItem {
-                icon: "󰌾"
-                label: "Lock"
-
-                onTriggered: {
-                    root.visible = false
-                    Services.PowerService.lock()
+                    font.pixelSize:
+                        Config.Theme.fontLarge
                 }
-            }
 
-            PowerItem {
-                icon: "󰍃"
-                label: "Logout"
+                Rectangle {
+                    Layout.fillWidth: true
+                    implicitHeight: Config.Theme.separatorWidth
 
-                onTriggered: {
-                    root.visible = false
-                    Services.PowerService.logout()
+                    color:
+                        Config.Theme.border
                 }
-            }
 
-            PowerItem {
-                icon: "󰜉"
-                label: "Reboot"
+                PowerItem {
+                    id: lockAction
+                    icon: "󰌾"
+                    label: "Lock"
 
-                onTriggered: {
-                    root.visible = false
-                    Services.PowerService.reboot()
+                    onTriggered: {
+                        root.close(false)
+                        Services.PowerService.lock()
+                    }
                 }
-            }
 
-            PowerItem {
-                icon: "󰐥"
-                label: "Shutdown"
-                dangerous: true
+                PowerItem {
+                    id: logoutAction
+                    icon: "󰍃"
+                    label: "Logout"
 
-                onTriggered: {
-                    root.visible = false
-                    Services.PowerService.shutdown()
+                    onTriggered: {
+                        root.close(false)
+                        Services.PowerService.logout()
+                    }
+                }
+
+                PowerItem {
+                    id: rebootAction
+                    icon: "󰜉"
+                    label: "Reboot"
+
+                    onTriggered: {
+                        root.close(false)
+                        Services.PowerService.reboot()
+                    }
+                }
+
+                PowerItem {
+                    id: shutdownAction
+                    icon: "󰐥"
+                    label: "Shutdown"
+                    dangerous: true
+
+                    onTriggered: {
+                        root.close(false)
+                        Services.PowerService.shutdown()
+                    }
                 }
             }
         }
     }
 
-    component PowerItem: Rectangle {
+    component PowerItem: Components.IconButton {
         id: item
-
-        property string icon: ""
-        property string label: ""
+        focusController: root
+        property alias label: item.text
         property bool dangerous: false
-
         signal triggered()
-
         Layout.fillWidth: true
-
-        implicitHeight: 42
-
-        radius:
-            Config.Theme.radiusSmall
-
-        color:
-            mouseArea.containsMouse
-            ? Config.Theme.surfaceHover
-            : "transparent"
-
-        RowLayout {
-            anchors {
-                fill: parent
-                leftMargin: 10
-                rightMargin: 10
-            }
-
-            spacing: 10
-
-            Components.StyledText {
-                text:
-                    item.icon
-
-                color:
-                    item.dangerous
-                    ? Config.Theme.urgent
-                    : Config.Theme.text
-
-                font.pixelSize:
-                    Config.Theme.fontLarge
-            }
-
-            Components.StyledText {
-                Layout.fillWidth: true
-
-                text:
-                    item.label
-
-                color:
-                    item.dangerous
-                    ? Config.Theme.urgent
-                    : Config.Theme.text
-            }
-        }
-
-        MouseArea {
-            id: mouseArea
-
-            anchors.fill: parent
-
-            hoverEnabled: true
-
-            cursorShape:
-                Qt.PointingHandCursor
-
-            onClicked:
-                item.triggered()
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration:
-                    Config.Animations.fast
-            }
-        }
+        implicitHeight: Config.Theme.popupActionHeight
+        fillContentWidth: true
+        background: "transparent"
+        foreground: dangerous ? Config.Theme.urgent : Config.Theme.text
+        iconColor: foreground
+        onClicked: triggered()
     }
 }

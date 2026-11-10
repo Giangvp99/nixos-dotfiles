@@ -1,0 +1,203 @@
+{
+  "host": "j4n9-proxmox",
+  "date": "2026-11-10",
+  "notes": [
+    "CPU is percent of one core during 5s idle samples.",
+    "Offscreen run preceded final resize callback dispatch fix; Wayland run uses final QML.",
+    "No GC requested in either run."
+  ],
+  "offscreen": {
+    "host": "j4n9-proxmox",
+    "backend": "offscreen",
+    "interval_ms": 120,
+    "samples": [
+      {
+        "rss_kib": 66492,
+        "pss_kib": 28809,
+        "private_dirty_kib": 13272,
+        "cpu_percent_one_core": 0.0,
+        "label": "idle",
+        "elapsed_seconds": 5.776,
+        "state": {
+          "pid": 10697,
+          "running": false,
+          "completed": 0,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 0,
+        "content_destroyed": 0,
+        "clock_created": 0,
+        "clock_destroyed": 0
+      },
+      {
+        "rss_kib": 89864,
+        "pss_kib": 43164,
+        "private_dirty_kib": 24660,
+        "cpu_percent_one_core": 0.0,
+        "label": "after_20_cycles",
+        "elapsed_seconds": 16.939,
+        "state": {
+          "pid": 10697,
+          "running": false,
+          "completed": 20,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 20,
+        "content_destroyed": 20,
+        "clock_created": 20,
+        "clock_destroyed": 20
+      },
+      {
+        "rss_kib": 89980,
+        "pss_kib": 52879,
+        "private_dirty_kib": 24776,
+        "cpu_percent_one_core": 0.4,
+        "label": "after_70_cycles",
+        "elapsed_seconds": 34.823,
+        "state": {
+          "pid": 10697,
+          "running": false,
+          "completed": 50,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 70,
+        "content_destroyed": 70,
+        "clock_created": 70,
+        "clock_destroyed": 70
+      }
+    ],
+    "idle_seconds": 5.0,
+    "batches": [
+      20,
+      50
+    ],
+    "reloads": 0,
+    "diagnostic_gc": false,
+    "quick_backend": "default",
+    "qs_version": "Quickshell 0.3.1 (revision 2d3b3e9c70ef380dff751b61d334dc88df016c29, distributed by Official-Nix-Flake)",
+    "source_sha256": {
+      "modules/dashboard/Dashboard.qml": "29d70e99b11643abeb910559ad01ce1cfc0a52afe069f56f9c4909f627ca6eff",
+      "modules/dashboard/DashboardContent.qml": "66ff2761124d3a4a10cd86438c2e7b5ae3a577a5ce3d5e42465ccddd4244879c",
+      "components/MonthCalendar.qml": "240d9f6fb5770fe6f677424f05e883ab200ec51144074218db352fd97d375b92"
+    }
+  },
+  "wayland": {
+    "host": "j4n9-proxmox",
+    "backend": "wayland",
+    "interval_ms": 120,
+    "samples": [
+      {
+        "rss_kib": 112236,
+        "pss_kib": 51949,
+        "private_dirty_kib": 20736,
+        "cpu_percent_one_core": 0.0,
+        "label": "idle",
+        "elapsed_seconds": 5.405,
+        "state": {
+          "pid": 11932,
+          "running": false,
+          "completed": 0,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 0,
+        "content_destroyed": 0,
+        "clock_created": 0,
+        "clock_destroyed": 0
+      },
+      {
+        "rss_kib": 209876,
+        "pss_kib": 112599,
+        "private_dirty_kib": 68928,
+        "cpu_percent_one_core": 0.8,
+        "label": "after_5_cycles",
+        "elapsed_seconds": 15.004,
+        "state": {
+          "pid": 11932,
+          "running": false,
+          "completed": 5,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 5,
+        "content_destroyed": 5,
+        "clock_created": 5,
+        "clock_destroyed": 5
+      },
+      {
+        "rss_kib": 222484,
+        "pss_kib": 125207,
+        "private_dirty_kib": 81536,
+        "cpu_percent_one_core": 0.8,
+        "label": "after_25_cycles",
+        "elapsed_seconds": 38.044,
+        "state": {
+          "pid": 11932,
+          "running": false,
+          "completed": 20,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 25,
+        "content_destroyed": 25,
+        "clock_created": 25,
+        "clock_destroyed": 25
+      },
+      {
+        "rss_kib": 232136,
+        "pss_kib": 134501,
+        "private_dirty_kib": 90340,
+        "cpu_percent_one_core": 0.6,
+        "label": "after_reload_1",
+        "elapsed_seconds": 47.277,
+        "state": {
+          "pid": 11932,
+          "running": false,
+          "completed": 0,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 27,
+        "content_destroyed": 27,
+        "clock_created": 27,
+        "clock_destroyed": 27
+      },
+      {
+        "rss_kib": 238796,
+        "pss_kib": 141161,
+        "private_dirty_kib": 97000,
+        "cpu_percent_one_core": 0.59,
+        "label": "after_reload_2",
+        "elapsed_seconds": 57.048,
+        "state": {
+          "pid": 11932,
+          "running": false,
+          "completed": 0,
+          "opened": false,
+          "loaded": false
+        },
+        "content_created": 29,
+        "content_destroyed": 29,
+        "clock_created": 29,
+        "clock_destroyed": 29
+      }
+    ],
+    "idle_seconds": 5.0,
+    "batches": [
+      5,
+      20
+    ],
+    "reloads": 2,
+    "diagnostic_gc": false,
+    "quick_backend": "default",
+    "qs_version": "Quickshell 0.3.1 (revision 2d3b3e9c70ef380dff751b61d334dc88df016c29, distributed by Official-Nix-Flake)",
+    "source_sha256": {
+      "modules/dashboard/Dashboard.qml": "14e3a006043edf05bd386c338d2d1bc29e35ad6f2b43f3327f0302de698feb8a",
+      "modules/dashboard/DashboardContent.qml": "f29ce0d992a8b3e29e099a724fa8c42a1e93f114eebb057a60253c65bdd41fd3",
+      "components/MonthCalendar.qml": "240d9f6fb5770fe6f677424f05e883ab200ec51144074218db352fd97d375b92"
+    }
+  }
+}

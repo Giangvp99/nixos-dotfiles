@@ -10,9 +10,10 @@ Item {
 
     property string appId: ""
     property int iconSize: 18
+    property var appEntry: null
 
     readonly property var desktopEntry:
-        resolveDesktopEntry(appId)
+        appEntry || resolveDesktopEntry(appId)
 
     readonly property string iconName: {
         if (!desktopEntry)

@@ -2,22 +2,18 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import Quickshell
-
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
 
-PopupWindow {
+BarPopup {
     id: root
 
-    property Item anchorItem
-
     readonly property int popupWidth: 320
-    readonly property int headerHeight: 44
-    readonly property int networkRowHeight: 44
+    readonly property int headerHeight: Config.Theme.popupHeaderHeight
+    readonly property int networkRowHeight: Config.Theme.popupActionHeight
     readonly property int maxVisibleNetworks: 7
-    readonly property int popupPadding: 12
+    readonly property int popupPadding: Config.Theme.popupPadding
 
     /*
      * Quickshell ObjectModel không có .count.
@@ -43,59 +39,56 @@ PopupWindow {
         visibleNetworkCount
         * networkRowHeight
 
-    width:
+    preferredWidth:
         popupWidth
 
-    height:
+    preferredHeight:
         headerHeight
         + listHeight
         + popupPadding * 2
         + 1
+        + ((!Services.NetworkService.available || !Services.NetworkService.enabled || networkCount === 0) ? 60 : 0)
 
-    visible: false
-    grabFocus: true
-
-    color:
-        "transparent"
-
-    anchor {
-        item:
-            root.anchorItem
-
-        edges:
-            Edges.Bottom
-            | Edges.Right
-
-        gravity:
-            Edges.Bottom
-            | Edges.Left
-
-        margins.bottom: 8
-
-        adjustment:
-            PopupAdjustment.Slide
-            | PopupAdjustment.Flip
+    initialFocusItem: networkList.visible && networkCount > 0 ? networkList : popupSurface
+    function moveNetworkFocus(delta) {
+        if (!networkList.count) return
+        const networks = Services.NetworkService.networks.values
+        let next = networkList.currentIndex
+        let found = false
+        for (let i = 0; i < networkList.count; ++i) {
+            next = (next + delta + networkList.count) % networkList.count
+            if (networks[next] && !networks[next].stateChanging) { found = true; break }
+        }
+        if (!found) return
+        networkList.currentIndex = next
+        networkList.positionViewAtIndex(networkList.currentIndex, ListView.Contain)
+        Qt.callLater(function() {
+            if (root.visible && networkList.currentItem && networkList.currentItem.enabled) networkList.currentItem.forceActiveFocus()
+        })
     }
+    function cycleFocus(delta) { moveNetworkFocus(delta) }
 
-    onVisibleChanged: {
-        if (visible)
-            Services.NetworkService.startScanning()
-        else
-            Services.NetworkService.stopScanning()
+    Connections {
+        target: root
+        function onVisibleChanged() {
+            if (root.visible) {
+                networkList.currentIndex = 0
+                Services.NetworkService.startScanning()
+            } else Services.NetworkService.stopScanning()
+        }
     }
+    Component.onDestruction: Services.NetworkService.stopScanning()
 
-    Rectangle {
+    Components.Surface {
+        id: popupSurface
+        panel: true
+        focus: true
+        Keys.onDownPressed: root.moveNetworkFocus(1)
+        Keys.onUpPressed: root.moveNetworkFocus(-1)
+        Keys.onTabPressed: root.moveNetworkFocus(1)
+        Keys.onBacktabPressed: root.moveNetworkFocus(-1)
+        Keys.onEscapePressed: root.close(true)
         anchors.fill: parent
-
-        color:
-            Config.Theme.background
-
-        radius:
-            Config.Theme.radiusMedium
-
-        border.width: 1
-        border.color:
-            Config.Theme.surface
 
         Column {
             anchors {
@@ -122,7 +115,7 @@ PopupWindow {
                         text:
                             "Wi-Fi"
 
-                        font.bold: true
+                        font.weight: Config.Theme.emphasisFontWeight
 
                         font.pixelSize:
                             Config.Theme.fontLarge
@@ -164,10 +157,10 @@ PopupWindow {
                 width:
                     parent.width
 
-                height: 1
+                height: Config.Theme.separatorWidth
 
                 color:
-                    Config.Theme.surface
+                    Config.Theme.border
             }
 
             /*
@@ -177,6 +170,7 @@ PopupWindow {
                 visible:
                     !Services.NetworkService.available
                     || !Services.NetworkService.enabled
+                    || root.networkCount === 0
 
                 width:
                     parent.width
@@ -189,7 +183,7 @@ PopupWindow {
                     text:
                         !Services.NetworkService.available
                         ? "No Wi-Fi adapter"
-                        : "Wi-Fi is disabled"
+                        : (!Services.NetworkService.enabled ? "Wi-Fi is disabled" : "No networks found")
 
                     color:
                         Config.Theme.subtext
@@ -201,6 +195,7 @@ PopupWindow {
              */
             ListView {
                 id: networkList
+                keyNavigationEnabled: false
 
                 visible:
                     Services.NetworkService.available
@@ -209,8 +204,9 @@ PopupWindow {
                 width:
                     parent.width
 
-                height:
-                    root.listHeight
+                height: Math.max(0, Math.min(root.listHeight, root.height - root.headerHeight - root.popupPadding * 2 - Config.Theme.separatorWidth))
+                Keys.onReturnPressed: if (currentItem && currentItem.enabled) currentItem.clicked()
+                Keys.onEnterPressed: if (currentItem && currentItem.enabled) currentItem.clicked()
 
                 clip: true
                 spacing: 0
@@ -221,10 +217,18 @@ PopupWindow {
                 model:
                     Services.NetworkService.networks
 
-                delegate: Rectangle {
+                delegate: Components.IconButton {
                     id: networkItem
+                    focusController: root
 
                     required property var modelData
+                    required property int index
+                    Accessible.name: network ? network.name : ""
+                    onActiveFocusChanged: if (activeFocus) networkList.currentIndex = index
+                    onClicked: {
+                        if (network && !network.connected && !network.stateChanging)
+                            Services.NetworkService.connectNetwork(network)
+                    }
 
                     readonly property var network:
                         modelData
@@ -235,31 +239,17 @@ PopupWindow {
                     height:
                         root.networkRowHeight
 
-                    radius:
-                        Config.Theme.radiusSmall
-
-                    color: {
-                        if (
-                            network
-                            && network.connected
-                        ) {
-                            return Config.Theme.surface
-                        }
-
-                        if (networkMouse.containsMouse)
-                            return Config.Theme.surfaceHover
-
-                        return "transparent"
-                    }
+                    enabled: network && !network.stateChanging
+                    background: network && network.connected ? Config.Theme.surface : "transparent"
 
                     RowLayout {
                         anchors {
                             fill: parent
-                            leftMargin: 8
-                            rightMargin: 8
+                            leftMargin: Config.Theme.controlPadding
+                            rightMargin: Config.Theme.controlPadding
                         }
 
-                        spacing: 10
+                        spacing: Config.Theme.controlSpacing
 
                         /*
                          * Signal icon
@@ -278,8 +268,8 @@ PopupWindow {
                                 ? Config.Theme.primary
                                 : Config.Theme.text
 
-                            font.pixelSize:
-                                Config.Theme.fontLarge
+                            font.family: Config.Theme.iconFontFamily
+                            font.pixelSize: Config.Theme.controlIconSize
                         }
 
                         /*
@@ -333,40 +323,12 @@ PopupWindow {
                         }
                     }
 
-                    MouseArea {
-                        id: networkMouse
-
-                        anchors.fill: parent
-
-                        hoverEnabled: true
-
-                        cursorShape:
-                            Qt.PointingHandCursor
-
-                        enabled:
-                            network
-                            && !network.connected
-                            && !network.stateChanging
-
-                        onClicked: {
-                            Services.NetworkService
-                                .connectNetwork(network)
-                        }
-                    }
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration:
-                                Config.Animations.fast
-                        }
-                    }
                 }
 
                 ScrollBar.vertical:
                     ScrollBar {
                         policy:
-                            root.networkCount
-                                > root.maxVisibleNetworks
+                            networkList.contentHeight > networkList.height
                             ? ScrollBar.AsNeeded
                             : ScrollBar.AlwaysOff
                     }

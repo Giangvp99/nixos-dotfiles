@@ -3,6 +3,7 @@ import QtQuick.Layouts
 
 import "../../config" as Config
 import "./widgets" as Widgets
+import "../../services" as Services
 
 RowLayout {
     
@@ -16,7 +17,9 @@ RowLayout {
     
     Widgets.Brightness {}
 
-    Widgets.Audio {}
+    Widgets.Audio { visible: Config.Config.showAudio && Services.AudioService.available }
+
+    Widgets.Notifications {}
 
     Widgets.Date {}
 

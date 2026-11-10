@@ -7,6 +7,29 @@ import Quickshell.Networking
 QtObject {
     id: root
 
+    readonly property bool statusAvailable: Networking.devices.values.length > 0
+    readonly property var connectedDevice: Networking.devices.values.find(device => device && device.connected) || null
+    readonly property bool linkConnected: connectedDevice !== null
+    readonly property string connectionLabel: {
+        if (!statusAvailable) return "Network details unavailable"
+        if (!connectedDevice) return "Disconnected"
+        if (connectedDevice.type === DeviceType.Wired) return "Ethernet · " + connectedDevice.name
+        return networkName || connectedDevice.name
+    }
+    readonly property string connectionIcon: connectedDevice && connectedDevice.type === DeviceType.Wired ? "󰈀" : "󰤨"
+    readonly property string connectivityText: {
+        if (!statusAvailable) return "No connection data from the network backend"
+        if (!connectedDevice) return "No active network link"
+        if (!Networking.canCheckConnectivity) return "Link connected"
+        switch (Networking.connectivity) {
+        case NetworkConnectivity.Full: return "Internet available"
+        case NetworkConnectivity.Portal: return "Network sign-in required"
+        case NetworkConnectivity.Limited: return "Limited connectivity"
+        case NetworkConnectivity.None: return "No internet access"
+        default: return "Connectivity unknown"
+        }
+    }
+
     /*
      * Adapter Wi-Fi đầu tiên trên máy.
      *

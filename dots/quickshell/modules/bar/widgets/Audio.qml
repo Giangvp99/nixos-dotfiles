@@ -1,76 +1,19 @@
 import QtQuick
-import QtQuick.Layouts
-
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
 
-Components.Surface {
+Components.IconButton {
     id: root
-
-    visible:
-        Services.AudioService.available
-
-    implicitWidth:
-        content.implicitWidth + 16
-
-    implicitHeight: 28
-
-    color:
-        mouseArea.containsMouse
-        ? Config.Theme.surfaceHover
-        : Config.Theme.surface
-
-    RowLayout {
-        id: content
-
-        anchors.centerIn: parent
-
-        spacing: 6
-
-        Components.StyledText {
-            text: root.volumeIcon
-
-            color:
-                Services.AudioService.muted
-                ? Config.Theme.subtext
-                : Config.Theme.text
-
-            font.pixelSize:
-                Config.Theme.fontLarge
-        }
-
-        Components.StyledText {
-            text:
-                Services.AudioService.muted
-                ? "Mute"
-                : Services.AudioService.volumePercent + "%"
-
-            color:
-                Services.AudioService.muted
-                ? Config.Theme.subtext
-                : Config.Theme.text
-        }
-    }
-
-    MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
-
-        hoverEnabled: true
-
-        cursorShape: Qt.PointingHandCursor
-
-        onClicked:
-            Services.AudioService.toggleMute()
-
-        onWheel: event => {
-            if (event.angleDelta.y > 0)
-                Services.AudioService.increaseVolume()
-            else if (event.angleDelta.y < 0)
-                Services.AudioService.decreaseVolume()
-        }
+    visible: Services.AudioService.available
+    icon: volumeIcon
+    text: Services.AudioService.muted ? "Mute" : Services.AudioService.volumePercent + "%"
+    foreground: Services.AudioService.muted ? Config.Theme.subtext : Config.Theme.controlForeground
+    wheelEnabled: true
+    onClicked: Services.AudioService.toggleMute()
+    onScrolled: delta => {
+        if (delta > 0) Services.AudioService.increaseVolume()
+        else if (delta < 0) Services.AudioService.decreaseVolume()
     }
 
     readonly property string volumeIcon: {
@@ -95,10 +38,4 @@ Components.Surface {
         return "󰕾"
     }
 
-    Behavior on color {
-        ColorAnimation {
-            duration:
-                Config.Animations.fast
-        }
-    }
 }

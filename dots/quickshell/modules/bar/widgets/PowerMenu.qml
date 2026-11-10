@@ -6,21 +6,13 @@ import "../popups" as Popups
 Components.IconButton {
     id: root
 
-    /*
-     * Nerd Font power icon.
-     */
     icon: "󰐥"
     text: ""
+    Accessible.name: "Session"
 
-    implicitWidth: 34
-    implicitHeight: 28
+    active: popup.visible
 
-    active: true
-
-    onClicked: {
-        popup.visible =
-            !popup.visible
-    }
+    onClicked: popup.toggle()
 
     Popups.PowerPopup {
         id: popup

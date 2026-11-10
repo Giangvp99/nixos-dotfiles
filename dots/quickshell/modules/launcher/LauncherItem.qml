@@ -1,102 +1,62 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-
 import "../../config" as Config
 import "../../components" as Components
 
-Rectangle {
+Components.IconButton {
     id: root
-
     required property var app
     required property bool selected
-
+    property bool pinned: false
     signal activated()
 
-    implicitHeight: 52
-    radius: Config.Theme.radiusSmall
-
-    color:
-        selected || mouseArea.containsMouse
-            ? Config.Theme.surfaceHover
-            : "transparent"
+    activeFocusOnTab: false
+    Accessible.name: app ? app.name : ""
+    implicitHeight: Config.Config.launcherRowHeight
+    active: selected
+    background: selected ? Config.Theme.surfaceHover : "transparent"
+    border.width: selected ? Config.Theme.focusBorderWidth : 0
+    border.color: Config.Theme.primary
+    onClicked: activated()
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 12
-        anchors.rightMargin: 12
+        anchors.leftMargin: Config.Theme.spaceLarge
+        anchors.rightMargin: Config.Theme.spaceLarge
+        spacing: Config.Theme.spaceLarge
 
-        spacing: 12
-
-        Image {
-            Layout.preferredWidth: 28
-            Layout.preferredHeight: 28
-
-            source:
-                root.app.icon
-                    ? Quickshell.iconPath(
-                        root.app.icon,
-                        true
-                    )
-                    : ""
-
-            fillMode:
-                Image.PreserveAspectFit
+        Components.AppIcon {
+            appEntry: root.app
+            appId: root.app ? root.app.id : ""
+            iconSize: Config.Theme.launcherIconSize
         }
-
         ColumnLayout {
             Layout.fillWidth: true
-
-            spacing: 1
-
+            spacing: 0
             Components.StyledText {
                 Layout.fillWidth: true
-
-                text:
-                    root.app.name || ""
-
-                color:
-                    Config.Theme.text
-
-                font.pixelSize:
-                    Config.Theme.fontNormal
-
-                elide:
-                    Text.ElideRight
+                text: root.app ? root.app.name : ""
+                font.weight: root.selected ? Config.Theme.emphasisFontWeight : Config.Theme.controlFontWeight
+                elide: Text.ElideRight
+                maximumLineCount: 1
             }
-
             Components.StyledText {
                 Layout.fillWidth: true
-
-                visible:
-                    text.length > 0
-
-                text:
-                    root.app.genericName || ""
-
-                color:
-                    Config.Theme.subtext
-
-                font.pixelSize:
-                    Config.Theme.fontSmall
-
-                elide:
-                    Text.ElideRight
+                visible: text.length > 0
+                text: root.app ? (root.app.genericName || "") : ""
+                color: Config.Theme.subtext
+                font.pixelSize: Config.Theme.fontSmall
+                elide: Text.ElideRight
+                maximumLineCount: 1
             }
         }
-    }
-
-    MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
-
-        hoverEnabled: true
-
-        cursorShape:
-            Qt.PointingHandCursor
-
-        onClicked:
-            root.activated()
+        Components.StyledText {
+            visible: root.pinned
+            text: "󰐃"
+            color: Config.Theme.primary
+            font.family: Config.Theme.iconFontFamily
+            font.pixelSize: Config.Theme.controlIconSize
+            Accessible.name: "Pinned"
+        }
     }
 }

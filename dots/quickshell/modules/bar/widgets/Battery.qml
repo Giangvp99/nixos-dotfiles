@@ -10,12 +10,6 @@ Components.StatusText {
     visible:
         Services.BatteryService.available
 
-    /*
-     * Vì giờ có thêm status nên widget cần rộng hơn.
-     */
-    implicitWidth:
-        Config.Config.batteryWidth
-
     icon:
         batteryIcon()
 
@@ -26,7 +20,7 @@ Components.StatusText {
 
     foreground:
         lowBattery
-        ? Config.Theme.urgent
+        ? Config.Theme.warning
         : Config.Theme.text
 
     iconColor:
@@ -34,7 +28,7 @@ Components.StatusText {
         ? Config.Theme.primary
         : (
             lowBattery
-            ? Config.Theme.urgent
+            ? Config.Theme.warning
             : Config.Theme.text
         )
 

@@ -10,3 +10,5 @@ Battery 1.0 Battery.qml
 PowerMenu 1.0 PowerMenu.qml
 Keyboard 1.0 Keyboard.qml
 ModeIndicator 1.0 ModeIndicator.qml
+Notifications 1.0 Notifications.qml
+Dashboard 1.0 Dashboard.qml

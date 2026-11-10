@@ -7,6 +7,7 @@ Text {
 
     font.family: Config.Theme.fontFamily
     font.pixelSize: Config.Theme.fontNormal
+    font.weight: Config.Theme.controlFontWeight
 
     verticalAlignment: Text.AlignVCenter
 }

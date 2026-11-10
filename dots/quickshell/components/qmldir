@@ -3,3 +3,7 @@ StyledText 1.0 StyledText.qml
 Surface 1.0 Surface.qml
 IconButton 1.0 IconButton.qml
 AppIcon 1.0 AppIcon.qml
+MonthCalendar 1.0 MonthCalendar.qml
+StyledSlider 1.0 StyledSlider.qml
+OverlayMotion 1.0 OverlayMotion.qml
+OverlayFocus 1.0 OverlayFocus.qml

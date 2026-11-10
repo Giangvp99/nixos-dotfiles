@@ -20,7 +20,7 @@ QtObject {
     }
 
     function logout() {
-        Hyprland.dispatch("exit")
+        Hyprland.dispatch("hl.dsp.exit()")
     }
 
     function reboot() {

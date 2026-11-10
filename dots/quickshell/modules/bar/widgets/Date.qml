@@ -15,27 +15,14 @@ Components.IconButton {
             "ddd dd-MM"
         )
 
-    /*
-     * Đồng bộ kích thước / padding với Audio.
-     */
-    implicitHeight: 28
-    horizontalPadding: 10
-    spacing: 6
-
-    /*
-     * Luôn có background surface.
-     */
-    active: true
+    active: popup.visible
 
     SystemClock {
         id: clock
         precision: SystemClock.Minutes
     }
 
-    onClicked: {
-        popup.visible =
-            !popup.visible
-    }
+    onClicked: popup.toggle()
 
     Popups.CalendarPopup {
         id: popup

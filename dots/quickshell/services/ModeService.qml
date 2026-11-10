@@ -1,9 +1,16 @@
 pragma Singleton
 
 import QtQuick
+import Quickshell
 
 QtObject {
     id: root
+
+    function activate(modeId) {
+        if (["writing", "code", "relax"].indexOf(modeId) < 0) return false
+        Quickshell.execDetached(["hyprctl", "eval", "require(\"modes.core\").switch(" + JSON.stringify(modeId) + ")"])
+        return true
+    }
 
     function idFromWorkspace(name) {
         if (!name || !name.startsWith("mode-"))

@@ -8,10 +8,9 @@ import "../popups" as Popups
 Components.IconButton {
     id: root
 
-    /*
-     * Hiển thị giống StatusText:
-     * [ wifi-icon  SSID ]
-     */
+    visible: Services.NetworkService.available
+    maximumWidth: Config.Config.networkMaxWidth
+
     icon:
         wifiIcon()
 
@@ -28,28 +27,9 @@ Components.IconButton {
         return Services.NetworkService.networkName
     }
 
-    /*
-     * Cùng chiều cao với Brightness / Audio.
-     */
-    implicitHeight: 28
+    active: popup.visible
 
-    /*
-     * Không ép width cố định.
-     * Width tự theo icon + SSID giống StatusText.
-     */
-    horizontalPadding: 10
-    spacing: 6
-
-    /*
-     * Luôn dùng surface background,
-     * giống Brightness và Audio.
-     */
-    active: true
-
-    onClicked: {
-        popup.visible =
-            !popup.visible
-    }
+    onClicked: popup.toggle()
 
     Popups.WifiPopup {
         id: popup

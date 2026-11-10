@@ -1,170 +1,48 @@
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
-
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
 
-RowLayout {
+ListView {
     id: root
+    implicitWidth: contentWidth
+    implicitHeight: Config.Theme.controlHeight
+    orientation: ListView.Horizontal
+    spacing: Config.Theme.spaceSmall
+    clip: true
+    boundsBehavior: Flickable.StopAtBounds
+    model: Services.HyprlandService.visibleToplevels
 
-    spacing: 4
+    delegate: Components.IconButton {
+        id: windowItem
+        required property var modelData
+        readonly property var ipc: modelData ? modelData.lastIpcObject : null
+        readonly property var handle: modelData ? (modelData.wayland ?? modelData.handle) : null
+        readonly property string appId: ipc && ipc.class ? ipc.class : (handle ? handle.appId : "")
+        active: modelData ? Boolean(modelData.activated) : false
+        readonly property bool urgent: modelData ? Boolean(modelData.urgent) : false
+        readonly property bool minimized: Services.HyprlandService.isMinimized(modelData)
+        Accessible.name: modelData ? modelData.title : ""
+        horizontalPadding: 0
+        onClicked: Services.HyprlandService.activateToplevel(modelData)
+        width: Config.Theme.controlHeight
+        height: Config.Theme.controlHeight
 
-    Repeater {
-        model:
-            Services.HyprlandService.visibleToplevels
-
-        delegate: Rectangle {
-            id: windowItem
-
-            required property var modelData
-
-            /*
-             * modelData bây giờ là HyprlandToplevel.
-             */
-            readonly property var toplevel:
-                modelData
-
-            readonly property var ipc:
-                toplevel
-                && toplevel.lastIpcObject
-                ? toplevel.lastIpcObject
-                : null
-
-            readonly property var wayland:
-                toplevel
-                ? (
-                    toplevel.wayland
-                    || toplevel.handle
-                )
-                : null
-
-            // -------------------------------------------------------------
-            // Application identity
-            // -------------------------------------------------------------
-
-            readonly property string appId: {
-                /*
-                 * Ưu tiên class từ Hyprland IPC.
-                 */
-                if (
-                    ipc
-                    && typeof ipc.class === "string"
-                    && ipc.class.length > 0
-                ) {
-                    return ipc.class
-                }
-
-                if (
-                    ipc
-                    && typeof ipc.initialClass === "string"
-                    && ipc.initialClass.length > 0
-                ) {
-                    return ipc.initialClass
-                }
-
-                /*
-                 * Sau cùng mới thử Wayland appId.
-                 */
-                if (
-                    wayland
-                    && typeof wayland.appId === "string"
-                    && wayland.appId.length > 0
-                ) {
-                    return wayland.appId
-                }
-
-                return ""
-            }
-
-            // -------------------------------------------------------------
-            // Window state
-            // -------------------------------------------------------------
-
-            readonly property string windowTitle:
-                toplevel
-                && typeof toplevel.title === "string"
-                ? toplevel.title
-                : ""
-
-            readonly property bool active:
-                toplevel
-                ? Boolean(toplevel.activated)
-                : false
-
-            readonly property bool urgent:
-                toplevel
-                ? Boolean(toplevel.urgent)
-                : false
-
-            readonly property bool minimized:
-                Services.HyprlandService
-                .isMinimized(toplevel)
-
-            /*
-             * Không phụ thuộc appId để hiển thị.
-             */
-            visible:
-                toplevel !== null
-
-            implicitWidth: 28
-            implicitHeight: 28
-
-            color: "transparent"
-
-            Components.AppIcon {
-                id: appIcon
-
-                anchors.centerIn: parent
-
-                appId:
-                    windowItem.appId
-
-                iconSize: 18
-
-                opacity:
-                    windowItem.minimized
-                    ? 0.4
-                    : 1.0
-            }
-
-            Rectangle {
-                anchors {
-                    horizontalCenter:
-                        parent.horizontalCenter
-
-                    bottom:
-                        parent.bottom
-
-                    bottomMargin: 1
-                }
-
-                width:
-                    windowItem.active
-                    ? 14
-                    : 4
-
-                height: 2
-                radius: 1
-
-                visible:
-                    windowItem.active
-
-                color:
-                    windowItem.active
-                    ? Config.Theme.primary
-                    : Config.Theme.subtext
-            }
-
-
-            Behavior on color {
-                ColorAnimation {
-                    duration:
-                        Config.Animations.fast
-                }
-            }
-            
+        Components.AppIcon {
+            anchors.centerIn: parent
+            appId: windowItem.appId
+            iconSize: Config.Theme.appIconSize
+            opacity: windowItem.minimized ? Config.Theme.minimizedOpacity : 1
+        }
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: Config.Theme.indicatorMargin
+            width: windowItem.active ? Config.Theme.indicatorActiveWidth : Config.Theme.indicatorWidth
+            height: Config.Theme.indicatorHeight
+            radius: Config.Theme.indicatorHeight / 2
+            visible: windowItem.active || windowItem.urgent || windowItem.minimized
+            color: windowItem.urgent ? Config.Theme.urgent : (windowItem.minimized ? Config.Theme.minimized : Config.Theme.primary)
         }
     }
 }

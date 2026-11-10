@@ -69,7 +69,7 @@
       };
 
       nixosConfigurations = {
-	j4n9-proxmox = mkHost {
+        j4n9-proxmox = mkHost {
           hostname = "j4n9-proxmox";
           inherit system;
 

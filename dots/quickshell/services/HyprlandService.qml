@@ -208,55 +208,35 @@ QtObject {
         workspace.activate()
     }
 
-    /*
-     * Click icon trên RunningApps.
-     *
-     * Nếu window đang minimized:
-     *   special:minimized
-     *       ↓
-     *   current workspace
-     *       ↓
-     *   activate
-     *
-     * Nếu window bình thường:
-     *   activate trực tiếp.
-     */
+    // Lua and QML share an origin marker stored on the compositor window.
+    // It survives configuration reload and does not erase mode return tags.
     function activateToplevel(toplevel) {
         if (!toplevel)
             return
 
-        const handle =
-            toplevel.wayland
-            ?? toplevel.handle
-
         if (isMinimized(toplevel)) {
-            const current =
-                root.focusedWorkspace
-
-            if (
-                current
-                && toplevel.address
-            ) {
-                Hyprland.dispatch(
-                    "movetoworkspace "
-                    + current.name
-                    + ",address:"
-                    + toplevel.address
-                )
-
-                /*
-                 * Dispatch thay đổi workspace trước,
-                 * sau đó focus ở event-loop kế tiếp.
-                 */
-                Qt.callLater(function() {
-                    if (handle)
-                        handle.activate()
-                })
-
+            const current = root.focusedWorkspace
+            if (!current || !toplevel.address)
                 return
-            }
+            const tags = toplevel.lastIpcObject ? (toplevel.lastIpcObject.tags || []) : []
+            const marker = tags.find(tag => tag.startsWith("minimized-from-"))
+            const name = current.name
+            const target = marker ? marker.slice("minimized-from-".length)
+                : (/^\d+$/.test(name) || name.startsWith("special:") ? name : "name:" + name)
+            const address = toplevel.address.startsWith("0x") ? toplevel.address : "0x" + toplevel.address
+            const selector = "address:" + address
+            const window = "hl.get_window(" + JSON.stringify(selector) + ")"
+            Hyprland.dispatch("hl.dsp.window.move({window=" + window
+                + ",workspace=" + JSON.stringify(target) + ",follow=true})")
+            Hyprland.dispatch("hl.dsp.window.tag({window=" + window + ',tag="-minimized"})')
+            if (marker)
+                Hyprland.dispatch("hl.dsp.window.tag({window=" + window
+                    + ",tag=" + JSON.stringify("-" + marker) + "})")
+            Hyprland.dispatch("hl.dsp.focus({window=" + window + "})")
+            return
         }
 
+        const handle = toplevel.wayland ?? toplevel.handle
         if (handle)
             handle.activate()
     }

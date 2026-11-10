@@ -15,6 +15,4 @@ Components.StatusText {
     text:
         Services.InputMethodService.language
 
-    foreground:
-        Config.Theme.text
 }

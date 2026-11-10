@@ -1,15 +1,7 @@
 import QtQuick
-import Quickshell
 
-PopupWindow {
+BarPopup {
     id: root
-
-    property Item anchorItem
-
-    anchor.item:
-        anchorItem
-
-    visible: false
-
-    grabFocus: true
+    // Set preferredWidth/preferredHeight, initialFocusItem and a Surface content.
+    // Handle Escape on the content Item with root.close(true).
 }

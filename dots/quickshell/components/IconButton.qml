@@ -1,133 +1,61 @@
 import QtQuick
-import QtQuick.Layouts
-
 import "../config" as Config
 
-Rectangle {
+StatusText {
     id: root
-
-    property string icon: ""
-    property string text: ""
-
     property bool active: false
-    property bool hovered: mouseArea.containsMouse
-
-    property int horizontalPadding: 8
-    property int spacing: 6
-
+    property bool wheelEnabled: false
+    property var focusController: null
+    readonly property bool pressed: mouseArea.pressed
     signal clicked()
     signal rightClicked()
     signal middleClicked()
+    signal scrolled(real delta)
 
-    implicitWidth:
-        content.implicitWidth
-        + horizontalPadding * 2
-
-    implicitHeight: 28
-
-    radius:
-        Config.Theme.radiusSmall
-
-    color: {
-        if (hovered)
-            return Config.Theme.surfaceHover
-
-        if (active)
-            return Config.Theme.surface
-
-        return "transparent"
+    activeFocusOnTab: true
+    Accessible.role: Accessible.Button
+    Accessible.name: text
+    Keys.onTabPressed: event => {
+        if (focusController) focusController.cycleFocus(1)
+        else event.accepted = false
     }
-
-    RowLayout {
-        id: content
-
-        anchors.centerIn: parent
-
-        spacing:
-            root.spacing
-
-        Text {
-            visible:
-                root.icon.length > 0
-
-            text:
-                root.icon
-
-            color:
-                root.active
-                ? Config.Theme.primary
-                : Config.Theme.subtext
-
-            font.family:
-                Config.Theme.fontFamily
-
-            font.pixelSize:
-                Config.Theme.fontLarge
-
-            verticalAlignment:
-                Text.AlignVCenter
-        }
-
-        Text {
-            visible:
-                root.text.length > 0
-
-            text:
-                root.text
-
-            color:
-                Config.Theme.text
-
-            font.family:
-                Config.Theme.fontFamily
-
-            font.pixelSize:
-                Config.Theme.fontNormal
-
-            verticalAlignment:
-                Text.AlignVCenter
-
-            elide:
-                Text.ElideRight
-        }
+    Keys.onBacktabPressed: event => {
+        if (focusController) focusController.cycleFocus(-1)
+        else event.accepted = false
     }
+    Keys.onEnterPressed: if (enabled) clicked()
+    Keys.onReturnPressed: if (enabled) clicked()
+    Keys.onSpacePressed: if (enabled) clicked()
+    border.width: activeFocus ? Config.Theme.focusBorderWidth : 0
+    border.color: Config.Theme.controlSelected
+    foreground: active && icon.length === 0 ? Config.Theme.controlSelected : Config.Theme.controlForeground
+    iconColor: active ? Config.Theme.controlSelected : Config.Theme.controlIcon
+    opacity: enabled ? 1 : Config.Theme.disabledOpacity
+    color: pressed ? Config.Theme.controlPressed
+        : (hovered ? Config.Theme.controlHovered : background)
 
     MouseArea {
         id: mouseArea
-
         anchors.fill: parent
-
         hoverEnabled: true
-
-        acceptedButtons:
-            Qt.LeftButton
-            | Qt.RightButton
-            | Qt.MiddleButton
-
-        cursorShape:
-            Qt.PointingHandCursor
-
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+        cursorShape: Qt.PointingHandCursor
         onClicked: mouse => {
             switch (mouse.button) {
-            case Qt.LeftButton:
-                root.clicked()
-                break
-
-            case Qt.RightButton:
-                root.rightClicked()
-                break
-
-            case Qt.MiddleButton:
-                root.middleClicked()
-                break
+            case Qt.LeftButton: root.clicked(); break
+            case Qt.RightButton: root.rightClicked(); break
+            case Qt.MiddleButton: root.middleClicked(); break
             }
         }
+        onWheel: event => {
+            if (root.wheelEnabled) root.scrolled(event.angleDelta.y)
+            else event.accepted = false
+        }
     }
-
     Behavior on color {
         ColorAnimation {
-            duration:
-                Config.Animations.fast
+            duration: Config.Animations.fast
+            easing.type: Config.Animations.standardEasing
         }
     }
 }
