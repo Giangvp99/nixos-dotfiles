@@ -11,3 +11,9 @@ singleton NotificationService 1.0 NotificationService.qml
 NotificationRecord 1.0 NotificationRecord.qml
 singleton NotificationState 1.0 NotificationState.qml
 singleton DashboardState 1.0 DashboardState.qml
+singleton SystemMonitor 1.0 SystemMonitor.qml
+singleton ScreenService 1.0 ScreenService.qml
+singleton MediaService 1.0 MediaService.qml
+singleton FocusSession 1.0 FocusSession.qml
+singleton NotesService 1.0 NotesService.qml
+NetworkDetails 1.0 NetworkDetails.qml

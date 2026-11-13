@@ -3,3 +3,7 @@ CalendarPopup 1.0 CalendarPopup.qml
 PowerPopup 1.0 PowerPopup.qml
 BarPopup 1.0 BarPopup.qml
 singleton PopupState 1.0 PopupState.qml
+DetailsPopup 1.0 DetailsPopup.qml
+AudioPopup 1.0 AudioPopup.qml
+ResourcesPopup 1.0 ResourcesPopup.qml
+NetworkPopup 1.0 NetworkPopup.qml

@@ -1,0 +1,33 @@
+{
+  "first": {
+    "pid": 13915,
+    "cpuAvailable": true,
+    "cpu": 100,
+    "memoryAvailable": true,
+    "ram": 75,
+    "networkAvailable": true,
+    "interface": "ens18",
+    "download": 527.6953511374876,
+    "upload": 41.54302670623145,
+    "temperatureAvailable": false,
+    "sensorCount": 0,
+    "batteryAvailable": false
+  },
+  "last": {
+    "pid": 13915,
+    "cpuAvailable": true,
+    "cpu": 98,
+    "memoryAvailable": true,
+    "ram": 75,
+    "networkAvailable": true,
+    "interface": "ens18",
+    "download": 346346.03658536583,
+    "upload": 5394.308943089431,
+    "temperatureAvailable": false,
+    "sensorCount": 0,
+    "batteryAvailable": false
+  },
+  "rss_first_kib": 105532,
+  "rss_last_kib": 105512,
+  "cpu_percent_one_core": 0.0
+}

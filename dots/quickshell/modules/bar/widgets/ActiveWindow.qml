@@ -7,8 +7,8 @@ import "../../../services" as Services
 Components.StyledText {
     id: root
 
-    readonly property var activeWindow:
-        Services.HyprlandService.activeToplevel
+    property var workspace: Services.HyprlandService.focusedWorkspace
+    readonly property var activeWindow: Services.HyprlandService.activeToplevelFor(workspace)
 
     text:
         activeWindow

@@ -7,3 +7,9 @@ MonthCalendar 1.0 MonthCalendar.qml
 StyledSlider 1.0 StyledSlider.qml
 OverlayMotion 1.0 OverlayMotion.qml
 OverlayFocus 1.0 OverlayFocus.qml
+FixedStatus 1.0 FixedStatus.qml
+QuickToggle 1.0 QuickToggle.qml
+OverlayScreen 1.0 OverlayScreen.qml
+FixedStatusButton 1.0 FixedStatusButton.qml
+HistoryChart 1.0 HistoryChart.qml
+StyledScrollBar 1.0 StyledScrollBar.qml

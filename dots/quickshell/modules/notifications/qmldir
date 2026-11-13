@@ -3,3 +3,4 @@ ToastCard 1.0 ToastCard.qml
 NotificationHost 1.0 NotificationHost.qml
 NotificationCenter 1.0 NotificationCenter.qml
 NotificationHistoryItem 1.0 NotificationHistoryItem.qml
+NotificationReader 1.0 NotificationReader.qml

@@ -7,6 +7,32 @@ import Quickshell.Io
 
 QtObject {
     id: root
+    property bool metadataQueued: false
+    property var focusHistory: ({})
+    function scheduleMetadata() {
+        if (!metadataQueued) { metadataQueued=true; Qt.callLater(root.refreshMetadata) }
+    }
+    function refreshMetadata() { metadataQueued=false; Hyprland.refreshToplevels() }
+    function rememberFocused() {
+        const window=Hyprland.activeToplevel
+        if (!window || !window.workspace) return
+        const name=window.workspace.name
+        if (focusHistory[name]!==window.address) {
+            const next=Object.assign({},focusHistory)
+            next[name]=window.address
+            focusHistory=next
+        }
+    }
+    Component.onCompleted: { scheduleMetadata(); Qt.callLater(root.rememberFocused) }
+    property Connections compositorEvents: Connections {
+        target: Hyprland
+        function onActiveToplevelChanged() { Qt.callLater(root.rememberFocused) }
+        function onRawEvent(event) {
+            if (["openwindow","movewindowv2","changefloatingmode","configreloaded"].indexOf(event.name)>=0)
+                root.scheduleMetadata()
+        }
+    }
+
 
     property IpcHandler ipcHandler: IpcHandler {
         target: "hyprlandService"
@@ -84,107 +110,34 @@ QtObject {
         return toplevel.lastIpcObject.at[1]
     }
 
-    readonly property ScriptModel visibleToplevels: ScriptModel {
-        values: {
-            const normalWindows = []
-            const minimizedWindows = []
-
-            const current =
-                root.focusedWorkspace
-
-            const minimized =
-                root.minimizedWorkspace
-
-
-            // ================================================================
-            // Current workspace
-            // ================================================================
-
-            if (
-                current
-                && current.toplevels
-            ) {
-                const windows =
-                    current.toplevels.values
-
-                for (
-                    let i = 0;
-                    i < windows.length;
-                    ++i
-                ) {
-                    const window =
-                        windows[i]
-
-                    if (window)
-                        normalWindows.push(window)
-                }
-            }
-
-
-            // ================================================================
-            // Sort theo layout thực tế
-            // ================================================================
-            //
-            // Scrolling layout:
-            //
-            //      A       B       C
-            //      x=0     x=1280  x=2560
-            //
-            // Nếu swap B ↔ C thì tọa độ thay đổi.
-            // Widget vì thế cũng đổi thứ tự.
-            //
-            // Nếu nhiều window cùng một column,
-            // sort tiếp theo Y.
-            // ================================================================
-
-            normalWindows.sort(function(a, b) {
-                const ax =
-                    root.windowX(a)
-
-                const bx =
-                    root.windowX(b)
-
-                if (ax !== bx)
-                    return ax - bx
-
-                return (
-                    root.windowY(a)
-                    - root.windowY(b)
-                )
-            })
-
-
-            // ================================================================
-            // Minimized windows
-            // ================================================================
-
-            if (
-                minimized
-                && minimized !== current
-                && minimized.toplevels
-            ) {
-                const windows =
-                    minimized.toplevels.values
-
-                for (
-                    let i = 0;
-                    i < windows.length;
-                    ++i
-                ) {
-                    const window =
-                        windows[i]
-
-                    if (window)
-                        minimizedWindows.push(window)
-                }
-            }
-
-
-            // Minimized luôn nằm sau các window của Mode hiện tại.
-            return normalWindows.concat(
-                minimizedWindows
-            )
+    function minimizedOnMonitor(window, monitor) {
+        if (!window) return false
+        if (!monitor) return true
+        const ipc = window.lastIpcObject || {}
+        const marker = (ipc.tags || []).find(tag => tag.startsWith("minimized-from-"))
+        if (marker) {
+            const name = marker.slice("minimized-from-".length).replace(/^name:/, "")
+            const origin = workspaces.values.find(workspace => workspace.name === name)
+            if (origin && origin.monitor) return origin.monitor === monitor
         }
+        return ipc.monitor === monitor.id
+    }
+    function toplevelsFor(workspace, monitor) {
+        const normal = workspace && workspace.toplevels ? workspace.toplevels.values.filter(window => window !== null) : []
+        normal.sort((a,b) => windowX(a)-windowX(b) || windowY(a)-windowY(b))
+        const minimized = minimizedWorkspace && minimizedWorkspace !== workspace
+            ? minimizedWorkspace.toplevels.values.filter(window => minimizedOnMonitor(window, monitor)) : []
+        return normal.concat(minimized)
+    }
+    function activeToplevelFor(workspace) {
+        if (!workspace || !workspace.toplevels) return null
+        const windows = workspace.toplevels.values
+        const last = focusHistory[workspace.name] || (workspace.lastIpcObject ? workspace.lastIpcObject.lastwindow : "")
+        return windows.find(window => window && window.activated)
+            || windows.find(window => window && last && (window.address || "").replace(/^0x/, "") === last.replace(/^0x/, "")) || null
+    }
+    readonly property ScriptModel visibleToplevels: ScriptModel {
+        values: root.toplevelsFor(root.focusedWorkspace, null)
     }
 
     function isMinimized(toplevel) {

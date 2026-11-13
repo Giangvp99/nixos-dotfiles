@@ -15,11 +15,14 @@ Scope {
     property int selectedIndex: 0
     readonly property alias returnFocusItem: focusReturn.origin
     Components.OverlayFocus { id: focusReturn; opened: root.opened; windowVisible: window.backingWindowVisible }
+    readonly property var targetScreen: route.screen
+    Components.OverlayScreen { id: route; active: root.opened; onRemoved: root.close(false) }
     signal opening()
     readonly property alias panel: window
     readonly property var results: opened ? Services.AppService.search(query) : []
 
-    function open(origin) {
+    function open(origin, preferredScreen) {
+        if (!opened) route.capture(origin, preferredScreen)
         opening()
         focusReturn.remember(origin)
         searchInput.clear()
@@ -62,7 +65,8 @@ Scope {
     PanelWindow {
         id: window
         objectName: "applicationLauncher"
-        visible: root.opened
+        screen: route.screen
+        visible: root.opened && route.valid
         focusable: true
         aboveWindows: true
         exclusionMode: ExclusionMode.Ignore
@@ -105,6 +109,7 @@ Scope {
                     Layout.fillWidth: true
                     Layout.preferredHeight: Config.Config.launcherSearchHeight
                     Layout.minimumHeight: Config.Config.launcherSearchHeight
+                    color: Config.Theme.inputBackground
                     radius: Config.Theme.radiusSmall
                     border.width: Config.Theme.focusBorderWidth
                     border.color: searchInput.activeFocus ? Config.Theme.primary : Config.Theme.border
@@ -129,7 +134,7 @@ Scope {
                                 anchors.fill: parent
                                 color: Config.Theme.text
                                 selectionColor: Config.Theme.primary
-                                selectedTextColor: Config.Theme.background
+                                selectedTextColor: Config.Theme.onAccent
                                 font.family: Config.Theme.fontFamily
                                 font.pixelSize: Config.Theme.fontNormal
                                 verticalAlignment: TextInput.AlignVCenter
@@ -174,7 +179,7 @@ Scope {
                     spacing: Config.Theme.spaceSmall
                     boundsBehavior: Flickable.StopAtBounds
                     model: root.resultModel
-                    ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+                    ScrollBar.vertical: Components.StyledScrollBar { policy: ScrollBar.AsNeeded }
                     delegate: LauncherItem {
                         required property var modelData
                         required property int index

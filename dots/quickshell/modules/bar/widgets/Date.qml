@@ -6,13 +6,14 @@ import "../popups" as Popups
 
 Components.IconButton {
     id: root
+    property bool compact: false
 
     icon: ""
 
     text:
         Qt.formatDateTime(
             clock.date,
-            "ddd dd-MM"
+            root.compact ? "dd-MM" : "ddd dd-MM"
         )
 
     active: popup.visible

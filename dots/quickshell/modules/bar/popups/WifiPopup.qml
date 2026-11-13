@@ -9,6 +9,7 @@ import "../../../services" as Services
 BarPopup {
     id: root
 
+    readonly property string scanOwner: "wifi-popup:" + root.openedScreenName
     readonly property int popupWidth: 320
     readonly property int headerHeight: Config.Theme.popupHeaderHeight
     readonly property int networkRowHeight: Config.Theme.popupActionHeight
@@ -57,7 +58,7 @@ BarPopup {
         let found = false
         for (let i = 0; i < networkList.count; ++i) {
             next = (next + delta + networkList.count) % networkList.count
-            if (networks[next] && !networks[next].stateChanging) { found = true; break }
+            if (networks[next] && !networks[next].stateChanging && (networks[next].connected || Services.NetworkService.canConnect(networks[next]))) { found = true; break }
         }
         if (!found) return
         networkList.currentIndex = next
@@ -73,11 +74,11 @@ BarPopup {
         function onVisibleChanged() {
             if (root.visible) {
                 networkList.currentIndex = 0
-                Services.NetworkService.startScanning()
-            } else Services.NetworkService.stopScanning()
+                Services.NetworkService.startScanning(root.scanOwner)
+            } else Services.NetworkService.stopScanning(root.scanOwner)
         }
     }
-    Component.onDestruction: Services.NetworkService.stopScanning()
+    Component.onDestruction: Services.NetworkService.stopScanning(root.scanOwner)
 
     Components.Surface {
         id: popupSurface
@@ -239,7 +240,7 @@ BarPopup {
                     height:
                         root.networkRowHeight
 
-                    enabled: network && !network.stateChanging
+                    enabled: network && !network.stateChanging && (network.connected || Services.NetworkService.canConnect(network))
                     background: network && network.connected ? Config.Theme.surface : "transparent"
 
                     RowLayout {
@@ -289,6 +290,7 @@ BarPopup {
                                 ? Config.Theme.primary
                                 : Config.Theme.text
 
+                            textFormat: Text.PlainText
                             elide:
                                 Text.ElideRight
                         }
@@ -306,6 +308,9 @@ BarPopup {
 
                                 if (network.stateChanging)
                                     return "Connecting…"
+
+                                if (!network.known && !Services.NetworkService.canConnect(network))
+                                    return "Use Settings"
 
                                 return Math.round(
                                     network.signalStrength * 100
@@ -326,7 +331,7 @@ BarPopup {
                 }
 
                 ScrollBar.vertical:
-                    ScrollBar {
+                    Components.StyledScrollBar {
                         policy:
                             networkList.contentHeight > networkList.height
                             ? ScrollBar.AsNeeded

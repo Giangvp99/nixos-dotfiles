@@ -2,29 +2,44 @@ import QtQuick
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
+import "../popups" as Popups
 
-Components.IconButton {
+Components.FixedStatusButton {
     id: root
-    visible: Services.AudioService.available
+    cellWidth: Config.Config.audioStatusWidth
+    spacing: Config.Theme.controlSpacing
+    objectName: "barAudio"
+    property var audioService: Services.AudioService
+    readonly property alias detailsPopup: popup
+    doubleClickEnabled: true
+    active: popup.visible
+    Accessible.name: "Volume " + text + ". Click for audio settings; double-click to mute."
+    Popups.AudioPopup {
+        id: popup
+        anchorItem: root
+        audioService: root.audioService
+    }
+    visible: audioService.available
     icon: volumeIcon
-    text: Services.AudioService.muted ? "Mute" : Services.AudioService.volumePercent + "%"
-    foreground: Services.AudioService.muted ? Config.Theme.subtext : Config.Theme.controlForeground
+    text: audioService.muted ? "Mute" : audioService.volumePercent + "%"
+    foreground: audioService.muted ? Config.Theme.subtext : Config.Theme.controlForeground
     wheelEnabled: true
-    onClicked: Services.AudioService.toggleMute()
+    onClicked: popup.toggle()
+    onDoubleClicked: audioService.toggleMute()
     onScrolled: delta => {
-        if (delta > 0) Services.AudioService.increaseVolume()
-        else if (delta < 0) Services.AudioService.decreaseVolume()
+        if (delta > 0) audioService.increaseVolume()
+        else if (delta < 0) audioService.decreaseVolume()
     }
 
     readonly property string volumeIcon: {
-        if (!Services.AudioService.available)
+        if (!audioService.available)
             return "󰖁"
 
-        if (Services.AudioService.muted)
+        if (audioService.muted)
             return "󰖁"
 
         const volume =
-            Services.AudioService.volume
+            audioService.volume
 
         if (volume <= 0.0)
             return "󰖁"

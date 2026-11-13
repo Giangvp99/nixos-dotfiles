@@ -6,17 +6,19 @@ import "../../components" as Components
 Components.Surface {
     id: root
     property string title: ""
+    property int contentPadding: Config.Theme.panelPadding
+    property int contentSpacing: Config.Theme.spaceMedium
     default property alias content: layout.data
     implicitWidth: 240
-    implicitHeight: layout.implicitHeight + Config.Theme.panelPadding * 2
+    implicitHeight: layout.implicitHeight + root.contentPadding * 2
     radius: Config.Theme.radiusMedium
     ColumnLayout {
         id: layout
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.margins: Config.Theme.panelPadding
-        spacing: Config.Theme.spaceMedium
+        anchors.margins: root.contentPadding
+        spacing: root.contentSpacing
         Components.StyledText {
             visible: root.title.length > 0
             text: root.title

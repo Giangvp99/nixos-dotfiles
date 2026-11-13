@@ -5,7 +5,7 @@ import QtQuick
 QtObject {
     readonly property int barHeight: 38
     readonly property int barOuterMargin: 6
-    readonly property int barHorizontalPadding: 10
+    readonly property int barHorizontalPadding: 8
 
     readonly property int barSpacing: 8
 
@@ -16,8 +16,33 @@ QtObject {
     readonly property bool showActiveWindow: false
     readonly property bool showClock: true
     readonly property bool showAudio: true
+    readonly property bool showNetworkSpeed: true
+    readonly property bool showResourceUsage: true
+    readonly property bool showTemperature: true
+    readonly property bool showBatteryStatus: true
+    readonly property int metricsInterval: 2000
+    readonly property int temperatureInterval: 5000
+    readonly property string networkRateInterface: ""
+    readonly property var temperatureSensorPaths: []
+    readonly property int temperatureWarning: 80
+    readonly property int temperatureCritical: 95
+    readonly property int resourceWarning: 90
+    readonly property int batteryLow: 15
+    readonly property int batteryCritical: 5
+    readonly property int networkSpeedWidth: 96
+    readonly property int resourceUsageWidth: 60
+    readonly property int audioStatusWidth: 72
+    readonly property int temperatureWidth: 84
+    readonly property int batteryStatusWidth: 120
+    readonly property int metricsMaxWidth: 250
+    readonly property int powerStatusMaxWidth: 280
     readonly property int batteryWidth: 72
     readonly property int networkMaxWidth: 180
+
+    readonly property bool audioOsdEnabled: true
+    readonly property int audioOsdTimeout: 1500
+    readonly property int audioOsdWidth: 300
+    readonly property int audioOsdBottomMargin: 64
 
     readonly property int keyboardWidth: 42
 
@@ -35,6 +60,9 @@ QtObject {
     readonly property bool notificationsEnabled: false
     readonly property int notificationHistoryLimit: 100
     readonly property int notificationHistoryBodyLimit: 8192
+    readonly property int notificationFullTextBudget: 2097152
+    readonly property int notificationReaderWidth: 760
+    readonly property int notificationReaderHeight: 700
     readonly property int notificationCenterWidth: 420
     readonly property int notificationCenterHeight: 580
     readonly property int notificationWidth: 380
@@ -44,10 +72,13 @@ QtObject {
     readonly property int notificationBodyMaxHeight: 120
 
     readonly property string dashboardName: "jj"
-    readonly property int dashboardWidth: 1000
+    readonly property int dashboardWidth: 1260
     readonly property int dashboardMaxHeight: 740
-    readonly property int dashboardBreakpoint: 740
+    readonly property int dashboardBreakpoint: 1100
     readonly property var dashboardApps: launcherPinnedApps
+
+    readonly property int keybindWidth: 760
+    readonly property int keybindHeight: 600
 
     readonly property string clockFormat: "HH:mm"
 }

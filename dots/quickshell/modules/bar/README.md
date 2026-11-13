@@ -1,43 +1,20 @@
 # Bar Module
 
-Persistent top bar.
+`shell.qml` creates `Bars.qml`, which uses Variants to create one `Bar.qml` for
+each Quickshell screen. `Bar.qml` remains a directly instantiable PanelWindow for
+isolated tests. Each reserves only the top area of its own screen.
 
-## Structure
+BarLeft contains Dashboard, ModeIndicator and RunningApps. Its workspace/monitor
+come from the owning bar; mode and normal/minimized window lists therefore
+follow that screen. BarCenter optionally shows that workspace's window title.
+BarRight composes the existing compact metrics and fixed essential controls;
+widget dimensions and telemetry services remain shared/unchanged.
 
-Bar.qml
-├── BarLeft.qml
-├── BarCenter.qml
-└── BarRight.qml
+Widgets bind to services. Popups anchor to their own bar and close on screen
+loss; PopupState enforces global popup exclusivity. Notification centers register
+per screen while sharing the same notification state. See
+[MULTISCREEN](../../docs/MULTISCREEN.md) for routing policy and tests.
 
-widgets/
-├── Workspaces.qml
-├── ActiveWindow.qml
-└── Clock.qml
-
-## Responsibility
-
-Bar.qml:
-
-- tạo PanelWindow;
-- reserve top screen area;
-- quản lý background/layout cấp cao.
-
-BarLeft/Center/Right:
-
-- composition;
-- không chứa system logic.
-
-widgets:
-
-- hiển thị feature cụ thể;
-- bind vào service.
-
-## Khi thêm widget
-
-Ví dụ Audio:
-
-1. tạo AudioService nếu chưa có;
-2. tạo widgets/Audio.qml;
-3. thêm Audio vào widgets/qmldir;
-4. thêm Audio vào BarRight;
-5. cập nhật README.
+When adding a widget: create/reuse its service, export the widget in qmldir,
+compose it into the appropriate bar group, and update documentation. Keep system
+logic in services and pass screen/workspace context explicitly when relevant.

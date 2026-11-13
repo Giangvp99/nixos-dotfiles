@@ -83,3 +83,16 @@ API references:
 - [HyprlandFocusGrab](https://quickshell.org/docs/v0.3.1/types/Quickshell.Hyprland/HyprlandFocusGrab/)
 - [PopupWindow](https://quickshell.org/docs/v0.3.1/types/Quickshell/PopupWindow/)
 - [PopupAnchor](https://quickshell.org/docs/v0.3.1/types/Quickshell/PopupAnchor/)
+
+Multi-screen update: BarPopup captures its anchor screen name and closes when
+that screen/origin disappears or changes. Cross-screen bar taps dismiss the old
+popup. Wi-Fi scanning uses wifi-popup:<screen> ownership so another bar's popup
+cannot release its request. Notification centers register per screen while
+PopupState keeps one interactive popup open. See
+[MULTISCREEN](../../../docs/MULTISCREEN.md).
+
+DetailsPopup provides the shared lazy header/body and keyboard cycle for
+NetworkPopup, ResourcesPopup and AudioPopup. Network and audio bodies reuse the
+dashboard cards and size to content. All use BarPopup screen routing, focus,
+anchor tracking and PopupState exclusivity. See
+[WIDGET_DETAILS](../../../docs/WIDGET_DETAILS.md).

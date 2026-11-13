@@ -3,9 +3,12 @@ import QtQuick.Layouts
 import Quickshell
 import "../../config" as Config
 import "./popups" as Popups
+import "../../services" as Services
 
 PanelWindow {
     id: root
+    readonly property var monitor: Services.ScreenService.monitorFor(screen)
+    readonly property var workspace: monitor ? monitor.activeWorkspace : null
     anchors { top: true; left: true; right: true }
     implicitHeight: Config.Config.barHeight + Config.Config.barOuterMargin * 2
     color: "transparent"
@@ -31,22 +34,22 @@ PanelWindow {
             spacing: Config.Config.barSpacing
 
             BarLeft {
+                workspace: root.workspace
+                monitor: root.monitor
                 Layout.fillWidth: true
                 Layout.minimumWidth: Config.Config.workspaceWidth
             }
             BarCenter {
+                workspace: root.workspace
                 Layout.maximumWidth: Math.min(300, root.width * 0.2)
             }
-            Flickable {
-                // Keep every status control reachable even on narrow VM displays.
-                Layout.preferredWidth: Math.min(status.implicitWidth, root.width * 0.65)
-                Layout.preferredHeight: Config.Theme.controlHeight
-                contentWidth: status.implicitWidth
-                contentHeight: height
-                clip: true
-                flickableDirection: Flickable.HorizontalFlick
-                boundsBehavior: Flickable.StopAtBounds
-                BarRight { id: status }
+            BarRight {
+                Layout.fillWidth: false
+                Layout.alignment: Qt.AlignRight
+                compact: root.width < 900
+                Layout.preferredWidth: Math.min(implicitWidth, root.width * 0.78)
+                Layout.maximumWidth: root.width * 0.78
+                Layout.minimumWidth: 0
             }
         }
     }

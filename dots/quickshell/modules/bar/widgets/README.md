@@ -70,3 +70,16 @@ validation is documented in `../popups/README.md`.
 The Notifications bell reads only NotificationState, so an always-loaded bar does
 not claim the notification service while its optional backend is off. It shows
 unread count/DND and uses the shared popup lifecycle. See notifications/CENTER.md.
+
+NetworkSpeed, ResourceUsage, Temperature và Battery dùng chung StatusText/Theme,
+không tooltip. Dữ liệu thiếu hiển thị —/N/A; màu cảnh báo dùng token chung.
+Cụm metrics cuộn riêng, giữ các control thời gian/notification/session ở ngoài.
+Xem [SYSTEM_WIDGETS](../../../docs/SYSTEM_WIDGETS.md) cho cấu hình và kiểm thử.
+
+## Interactive details and shared spacing
+
+NetworkSpeed now includes the measured interface's LAN/Wi-Fi icon and opens
+NetworkPopup. ResourceUsage opens CPU/RAM history charts. Audio opens settings
+on single-click and mutes on double-click; wheel remains volume adjustment.
+All share 8px horizontal padding; text/icon gap is 4px, dense row gap 2px.
+Widths remain fixed. See [WIDGET_DETAILS](../../../docs/WIDGET_DETAILS.md).

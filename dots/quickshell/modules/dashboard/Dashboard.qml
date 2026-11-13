@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import "../../config" as Config
@@ -10,20 +9,27 @@ Scope {
     id: root
     property bool opened: false
     property var sessionMemory: null
-    onOpenedChanged: if (sessionMemory) sessionMemory.opened = opened
+    onOpenedChanged: if (sessionMemory) { sessionMemory.opened = opened; sessionMemory.screenName = route.screenName }
     function restoreSession(memory) {
         const wasOpen = memory.opened
         sessionMemory = memory
-        if (wasOpen) Qt.callLater(root.open)
+        if (wasOpen) Qt.callLater(function() {
+            const preferred=Services.ScreenService.screens.find(screen => screen.name === memory.screenName)
+            if (memory.screenName && !preferred) { memory.opened=false; return }
+            root.open(null, preferred)
+        })
     }
     readonly property alias panel: window
     readonly property alias content: loader.item
     readonly property alias returnFocusItem: focusReturn.origin
     Components.OverlayFocus { id: focusReturn; opened: root.opened; windowVisible: window.backingWindowVisible }
+    readonly property var targetScreen: route.screen
+    Components.OverlayScreen { id: route; active: root.opened; onRemoved: root.close(false) }
     signal opening()
     signal launcherRequested()
     signal notificationsRequested()
-    function open(origin) { opening(); focusReturn.remember(origin); scroll.contentY = 0; opened = true; Qt.callLater(focusContent) }
+    signal shortcutsRequested()
+    function open(origin, preferredScreen) { if (!opened) route.capture(origin, preferredScreen); opening(); focusReturn.remember(origin); opened = true; Qt.callLater(focusContent) }
     function close(restoreFocus = true) { opened = false; focusReturn.finish(restoreFocus) }
     function toggle(origin) { if (opened) close(); else open(origin) }
     function focusContent() { if (opened && loader.item) loader.item.closeControl.forceActiveFocus() }
@@ -39,7 +45,8 @@ Scope {
     }
     PanelWindow {
         id: window
-        visible: root.opened
+        screen: route.screen
+        visible: root.opened && route.valid
         focusable: true
         aboveWindows: true
         exclusionMode: ExclusionMode.Ignore
@@ -62,44 +69,25 @@ Scope {
             radius: Config.Theme.radiusLarge
             width: Math.max(0, Math.min(Config.Config.dashboardWidth, parent.width - Config.Theme.panelPadding * 2))
             height: Math.max(0, Math.min(Config.Config.dashboardMaxHeight,
-                loader.item ? loader.item.implicitHeight + Config.Theme.panelPadding * 2 : 0,
                 parent.height - Config.Theme.panelPadding * 2))
             anchors.horizontalCenter: parent.horizontalCenter
-            y: Math.min(Math.max(Config.Theme.panelPadding, parent.height * 0.1),
-                Math.max(Config.Theme.panelPadding, parent.height - height - Config.Theme.panelPadding))
+            anchors.verticalCenter: parent.verticalCenter
             MouseArea { anchors.fill: parent }
-            Flickable {
-                id: scroll
-                onHeightChanged: Qt.callLater(root.revealFocus)
-                onContentHeightChanged: Qt.callLater(root.revealFocus)
-                objectName: "dashboardScroll"
+            Loader {
+                id: loader
                 anchors.fill: parent
                 anchors.margins: Config.Theme.panelPadding
-                contentWidth: width
-                contentHeight: loader.item ? loader.item.implicitHeight : 0
-                boundsBehavior: Flickable.StopAtBounds
-                clip: true
-                ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
-                Loader {
-                    id: loader
-                    width: scroll.width
-                    height: item ? item.implicitHeight : 0
-                    active: root.opened
-                    onLoaded: Qt.callLater(root.focusContent)
-                    sourceComponent: DashboardContent {
-                        onLayoutUpdated: Qt.callLater(root.revealFocus)
-                        onFocusRequested: item => {
-                            const top = item.mapToItem(loader.item, 0, 0).y
-                            if (top < scroll.contentY) scroll.contentY = top
-                            else if (top + item.height > scroll.contentY + scroll.height)
-                                scroll.contentY = top + item.height - scroll.height
-                            scroll.contentY = Math.max(0, Math.min(scroll.contentY, scroll.contentHeight - scroll.height))
-                        }
-                        onCloseRequested: root.close()
-                        onLaunchRequested: app => { root.close(false); Services.AppService.launch(app) }
-                        onLauncherRequested: root.launcherRequested()
-                        onNotificationsRequested: root.notificationsRequested()
-                    }
+                active: root.opened
+                onLoaded: Qt.callLater(root.focusContent)
+                sourceComponent: DashboardContent {
+                    page: root.sessionMemory && typeof root.sessionMemory.page === "number" ? root.sessionMemory.page : 0
+                    onPageChanged: if (root.sessionMemory && typeof root.sessionMemory.page === "number") root.sessionMemory.page = page
+                    workspace: Services.ScreenService.workspaceFor(window.screen)
+                    onCloseRequested: root.close()
+                    onLaunchRequested: app => { root.close(false); Services.AppService.launch(app) }
+                    onLauncherRequested: root.launcherRequested()
+                    onNotificationsRequested: root.notificationsRequested()
+                    onShortcutsRequested: root.shortcutsRequested()
                 }
             }
         }

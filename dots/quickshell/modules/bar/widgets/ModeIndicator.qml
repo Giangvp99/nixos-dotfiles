@@ -5,7 +5,8 @@ import "../../../config" as Config
 
 Components.StatusText {
     id: root
-    readonly property var workspace: Services.HyprlandService.focusedWorkspace
+    objectName: "barModeIndicator"
+    property var workspace: Services.HyprlandService.focusedWorkspace
     readonly property string modeId: Services.ModeService.idFromWorkspace(workspace ? workspace.name : "")
     implicitWidth: Config.Config.workspaceWidth
     visible: modeId !== ""

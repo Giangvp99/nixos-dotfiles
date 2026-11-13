@@ -6,6 +6,7 @@ import "../../../services" as Services
 
 Components.StatusText {
     id: root
+    visible: Services.InputMethodService.language !== "--"
 
     implicitWidth:
         Config.Config.keyboardWidth

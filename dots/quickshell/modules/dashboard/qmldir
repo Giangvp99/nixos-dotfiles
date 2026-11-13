@@ -1,3 +1,9 @@
 Dashboard 1.0 Dashboard.qml
 DashboardContent 1.0 DashboardContent.qml
 DashboardCard 1.0 DashboardCard.qml
+AudioCard 1.0 AudioCard.qml
+NetworkCard 1.0 NetworkCard.qml
+MediaCard 1.0 MediaCard.qml
+FocusCard 1.0 FocusCard.qml
+NotesCard 1.0 NotesCard.qml
+ChoicePager 1.0 ChoicePager.qml

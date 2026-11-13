@@ -221,6 +221,24 @@ local function return_tag(mode_id)
 	return "mode-return-secondary-" .. mode_id
 end
 
+local function has_tag(window, wanted)
+	local tags = window.tags or {}
+	if type(tags) == "string" then
+		for tag in tags:gmatch("[^,%s]+") do
+			if tag == wanted then
+				return true
+			end
+		end
+	else
+		for _, tag in pairs(tags) do
+			if tag == wanted then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 --
 -- 2 monitors
 --
@@ -274,13 +292,19 @@ local function expand_secondary(mode_id)
 
 	local tag = return_tag(mode_id)
 
-	while true do
-		local window = hl.get_window("tag:" .. tag)
-
-		if window == nil then
-			break
+	-- Snapshot before dispatching: a stale/unchanged tag must not cause a loop.
+	local windows = {}
+	for _, window in pairs(hl.get_windows() or {}) do
+		local workspace = window.workspace
+		local minimized = has_tag(window, "minimized")
+			or (workspace ~= nil and workspace.name == "special:minimized")
+		if has_tag(window, tag) and not minimized then
+			table.insert(windows, window)
 		end
+	end
 
+	for _, window in ipairs(windows) do
+		-- Minimized windows retain their marker until a later refresh after restore.
 		-- Trả window về secondary lane.
 		hl.dispatch(hl.dsp.window.move({
 			window = window,

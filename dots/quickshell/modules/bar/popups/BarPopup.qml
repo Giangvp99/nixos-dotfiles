@@ -3,10 +3,13 @@ import Quickshell
 import Quickshell.Hyprland
 import "../../../config" as Config
 import "../../../components" as Components
+import "../../../services" as Services
 
 PopupWindow {
     id: root
     property Item anchorItem
+    readonly property var anchorScreen: anchor.window ? anchor.window.screen : null
+    property string openedScreenName: ""
     property Item initialFocusItem
     property int preferredWidth: 320
     property int preferredHeight: 300
@@ -34,12 +37,34 @@ PopupWindow {
         target: root.anchor.window
         function onWidthChanged() { if (root.visible) root.anchor.updateAnchor() }
         function onHeightChanged() { if (root.visible) root.anchor.updateAnchor() }
+        function onScreenChanged() { root.validateScreen() }
+    }
+    function validateScreen() {
+        if (visible && (!anchorItem || !Services.ScreenService.contains(anchorScreen)
+            || anchorScreen.name !== openedScreenName)) close(false)
+    }
+    onAnchorItemChanged: if (visible) validateScreen()
+    Connections {
+        target: Services.ScreenService
+        function onScreensChanged() { root.validateScreen() }
+    }
+    function refreshAnchor() { if (visible && anchor.window) anchor.updateAnchor() }
+    Connections {
+        target: root.anchorItem
+        function onXChanged() { root.refreshAnchor() }
+        function onYChanged() { root.refreshAnchor() }
+        function onWidthChanged() { root.refreshAnchor() }
+        function onHeightChanged() { root.refreshAnchor() }
     }
 
 
     Components.OverlayFocus { id: focusReturn; opened: root.visible; windowVisible: root.backingWindowVisible }
     Components.OverlayMotion { targetItem: root.contentItem; shown: root.backingWindowVisible && root.visible }
-    function open(origin) { focusReturn.remember(origin || anchorItem); visible = true }
+    function open(origin) {
+        if (!Services.ScreenService.contains(anchorScreen)) return
+        openedScreenName=anchorScreen.name
+        focusReturn.remember(origin || anchorItem); visible = true
+    }
     function toggle() { if (visible) close(true); else open() }
     function close(restoreFocus) {
         visible = false
@@ -50,6 +75,7 @@ PopupWindow {
     }
     onVisibleChanged: {
         if (visible) {
+            if (!openedScreenName && anchorScreen) openedScreenName=anchorScreen.name
             if (!focusReturn.origin) focusReturn.remember(anchorItem)
             PopupState.claim(root)
             Qt.callLater(root.focusContent)
@@ -61,7 +87,7 @@ PopupWindow {
             Qt.callLater(root.focusContent)
         } else grab.active = false
     }
-    Component.onDestruction: PopupState.release(root)
+    Component.onDestruction: { focusReturn.finish(false); PopupState.release(root) }
 
     HyprlandFocusGrab {
         id: grab

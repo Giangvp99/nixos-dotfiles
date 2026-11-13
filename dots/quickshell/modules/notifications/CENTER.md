@@ -13,25 +13,23 @@ open are also read and do not open competing toasts. Opening another bar popup
 or the launcher closes the center. Same-button toggle, Escape and outside-click
 behavior comes from the shared BarPopup/PopupState implementation.
 
-The center shows newest-first app, time, summary and plain body snapshots.
-Long bodies scroll. Native actions are shown only while the originating native
-notification remains alive. After expiry/client close/action dismissal, the
-snapshot remains readable as Archived and exposes no actions. Every invocation
-resolves the current native record by ID again; stale action references are
-never saved or invoked.
+The center is a compact newest-first list with two-line titles and four-line body
+previews. Each snapshot retains up to 8192 body characters for the list. Click a
+card, click Read notification, or press Enter/Space on a selected row to open a
+separate reading mode in the same popup (up to 760×700 logical pixels, clamped
+to the owning screen). The complete title/body appear there with a single scroll
+area. Back/Escape returns to the selected row and its list position; a subsequent
+Escape closes the center. Wheel, PageUp/PageDown and Up/Down scroll the reader.
 
-- Remove deletes one history entry and dismisses its native record if still live.
-- Clear all deletes all retained entries and dismisses their corresponding live
-  records. A toast close alone archives its content rather than erasing history.
-- Tab/Shift+Tab cycle header controls and the current row's actions/remove button.
-  Up/Down move between rows; Down from the header selects the first row.
-  Enter/Space on a history row invoke its live default action only; archived rows
-  do nothing. Delete removes the focused row. Escape closes the center.
-- DND hides ordinary toasts, while critical toasts remain eligible within the
-  existing bounded queue. Suppressed messages still enter history and retain
-  their normal native timeout policy. Turning DND off does not replay old toasts.
-- Transient notifications never enter history. Suppressing a transient notification
-  expires it instead of keeping an invisible persistent record.
+Opening a reader never invokes the application's default action. Explicit native
+action buttons remain available in the reader only while the native notification
+is tracked. Archived notifications remain readable from their saved full text.
+Remove and Clear all also release saved full payloads. Header DND, unread counts,
+overlay exclusivity, no tooltips and compact toast previews remain unchanged.
+
+Tab/Shift+Tab cycle controls in the active view and reveal action/remove buttons.
+Up/Down in the list select rows; Delete removes a selected row. Transient messages
+are excluded from both history and full-text storage.
 
 ## State and bounds
 
@@ -39,8 +37,8 @@ never saved or invoked.
 DND and the center-open flag. It has no native server/API and is safe to reference
 from the always-loaded bar. `NotificationService` remains the only server owner.
 
-`ShellRoot` supplies a top-level PersistentProperties containing historyJson
-(a string) and dnd (a boolean). NotificationState attaches after the reload stage.
+`ShellRoot` supplies a top-level PersistentProperties containing historyJson and detailsJson
+(strings) and dnd (a boolean). NotificationState attaches after the reload stage.
 JSON is serialized **in RAM only**, not written to a history file. Persisting a
 raw JS array directly was rejected during validation because Qt cannot reassign
 that JSValue to another engine. String snapshots are parsed by the new engine.
@@ -56,15 +54,27 @@ Defaults in Config.qml:
 | Setting | Default |
 | --- | --- |
 | notificationHistoryLimit | 100 entries |
-| notificationHistoryBodyLimit | 8192 characters per body |
+| notificationHistoryBodyLimit | 8192 characters per list preview |
+| notificationReaderWidth / Height | 760 / 700 logical px |
+| notificationFullTextBudget | 2097152 characters across saved full payloads |
 | notificationCenterWidth | 420 logical px |
 | notificationCenterHeight | 580 logical px |
 
-Summary/app name snapshots also have fixed 1024/256 character bounds. Truncated
-body snapshots show an ellipsis. Expired native notifications do not retain
-QObject/action references in history. When the history cap evicts a still-live
-record, the native record expires as well, avoiding hidden records that occupy
-queue capacity forever. Existing 32-record/3-toast bounds remain in force.
+Summary/app previews retain 4096/256 character bounds. Complete summary/body text
+is stored separately by notification ID in detailsJson, in RAM only. It survives
+native expiry and QML reload until removal, clearing, process exit or history
+retention eviction. Native QObject/action references are never saved there.
+
+Retention keeps at most 100 notifications and normally at most 2 Mi characters of
+full text. When over budget, whole oldest notifications are evicted instead of
+cutting their reader content. One oversized newest message is retained intact,
+so the budget is a soft aggregate limit rather than a per-message truncation.
+The original live-record expiry guards remain in force for evicted entries.
+
+Older snapshots are migrated: any text still present is moved to detail storage
+before their preview is shortened to 8K. If an older archived snapshot had already
+lost text, the reader identifies it as a saved preview. Missing text cannot be
+reconstructed; new messages retain their complete body.
 
 Custom shell entrypoints must supply the PersistentProperties memory and call
 NotificationState.attachMemory as shell.qml does before enabling the backend.
@@ -179,3 +189,14 @@ Artifacts: `/tmp/notification-center-live.png`,
 `/tmp/notification-center-live-signals.log`. The 3967-process opt-in survives QML
 reloads; new processes remain off by default. Permanent migration remains outside
 this session-only approval.
+
+## Preview/reader regression
+
+`tests/run-notification-reading.py` uses a fake service and temporary state on
+j4n9-proxmox. It checks 8K preview storage, compact list geometry, real clicks,
+Enter reader activation without application invocation, wider full text,
+wheel/PageUp/PageDown and final-line access, Back/Escape, explicit actions,
+archived full text, source reload, retention eviction and cleanup. TestEvent is
+attached to the popup surface so synthetic keyboard input targets that window.
+No real notification server, DND, actions or user history are changed.
+Log: `/tmp/notification-reading-tests.log`.

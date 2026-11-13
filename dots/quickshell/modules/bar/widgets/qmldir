@@ -12,3 +12,6 @@ Keyboard 1.0 Keyboard.qml
 ModeIndicator 1.0 ModeIndicator.qml
 Notifications 1.0 Notifications.qml
 Dashboard 1.0 Dashboard.qml
+NetworkSpeed 1.0 NetworkSpeed.qml
+ResourceUsage 1.0 ResourceUsage.qml
+Temperature 1.0 Temperature.qml

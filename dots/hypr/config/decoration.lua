@@ -1,3 +1,5 @@
+local theme = require("config.theme")
+
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 
 hl.config({
@@ -13,7 +15,7 @@ hl.config({
 			enabled = true,
 			range = 4,
 			render_power = 3,
-			color = 0xee1a1a1a,
+			color = theme.shadow,
 		},
 
 		blur = {

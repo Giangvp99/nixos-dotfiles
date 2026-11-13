@@ -40,8 +40,9 @@ Scope {
         }
         function toggleCenter(): bool {
             const state = Services.NotificationState
-            if (!state.available || !state.center) return false
-            state.center.toggle()
+            const center=state.centerForScreen(Services.ScreenService.focusedScreen)
+            if (!state.available || !center) return false
+            center.toggle()
             return true
         }
         function setDnd(value: bool): void {

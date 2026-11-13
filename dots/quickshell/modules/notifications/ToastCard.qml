@@ -17,6 +17,7 @@ Components.Surface {
     property string metadata: ""
     property string dismissLabel: "Dismiss notification"
     property bool unread: false
+    property bool expandedContent: false
     readonly property alias dismissButton: closeButton
     function focusTargets() {
         const targets = [root]
@@ -98,12 +99,15 @@ Components.Surface {
             font.weight: Config.Theme.emphasisFontWeight
             font.pixelSize: Config.Theme.fontLarge
             wrapMode: Text.Wrap
-            maximumLineCount: 2
-            elide: Text.ElideRight
+            objectName: "notificationSummary"
+            maximumLineCount: root.expandedContent ? 2147483647 : 2
+            elide: root.expandedContent ? Text.ElideNone : Text.ElideRight
         }
         Flickable {
+            objectName: "notificationBodyViewport"
             Layout.fillWidth: true
-            Layout.preferredHeight: Math.min(body.implicitHeight, Config.Config.notificationBodyMaxHeight)
+            Layout.preferredHeight: root.expandedContent ? body.implicitHeight : Math.min(body.implicitHeight, Config.Config.notificationBodyMaxHeight)
+            interactive: !root.expandedContent
             visible: body.text.length > 0
             contentWidth: width
             contentHeight: body.implicitHeight
@@ -111,6 +115,7 @@ Components.Surface {
             boundsBehavior: Flickable.StopAtBounds
             Components.StyledText {
                 id: body
+                objectName: "notificationBody"
                 width: parent.width
                 text: root.notification ? root.notification.body : ""
                 textFormat: Text.PlainText

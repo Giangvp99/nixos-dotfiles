@@ -1,17 +1,21 @@
 import QtQuick
+import Quickshell
 import "../../../config" as Config
 import "../../../components" as Components
 import "../../../services" as Services
 
 ListView {
     id: root
+    objectName: "barRunningApps"
+    property var workspace: Services.HyprlandService.focusedWorkspace
+    property var monitor: null
     implicitWidth: contentWidth
     implicitHeight: Config.Theme.controlHeight
     orientation: ListView.Horizontal
     spacing: Config.Theme.spaceSmall
     clip: true
     boundsBehavior: Flickable.StopAtBounds
-    model: Services.HyprlandService.visibleToplevels
+    model: ScriptModel { values: Services.HyprlandService.toplevelsFor(root.workspace, root.monitor) }
 
     delegate: Components.IconButton {
         id: windowItem

@@ -6,9 +6,43 @@ import Quickshell.Networking
 
 QtObject {
     id: root
+    property var backend: Networking
+    property var scanOwners: []
+    property var scanningDevice: null
+    property var lastAttempt: null
+    property string connectionError: ""
+    readonly property bool hardwareEnabled: backend.wifiHardwareEnabled
 
-    readonly property bool statusAvailable: Networking.devices.values.length > 0
-    readonly property var connectedDevice: Networking.devices.values.find(device => device && device.connected) || null
+    onWifiDeviceChanged: syncScanning()
+    onEnabledChanged: syncScanning()
+    onScanOwnersChanged: syncScanning()
+    function syncScanning() {
+        const next = scanOwners.length && enabled ? wifiDevice : null
+        if (scanningDevice && scanningDevice !== next) scanningDevice.scannerEnabled = false
+        scanningDevice = next
+        if (scanningDevice) scanningDevice.scannerEnabled = true
+    }
+    property Connections attemptSignals: Connections {
+        target: root.lastAttempt
+        ignoreUnknownSignals: true
+        function onConnectionFailed() { root.connectionError = "Connection failed. Check the saved credentials in Settings." }
+        function onConnectedChanged() { if (root.lastAttempt && root.lastAttempt.connected) root.connectionError = "" }
+    }
+
+    function connectionKind(name) {
+        const device=backend.devices.values.find(device => device && device.name===name)
+        if (!device) return "network"
+        if (device.type===DeviceType.Wired) return "lan"
+        if (device.type===DeviceType.Wifi) return "wifi"
+        return "network"
+    }
+    function iconForInterface(name) {
+        const kind=connectionKind(name)
+        return kind==="lan" ? "󰈀" : kind==="wifi" ? "󰤨" : "󰛳"
+    }
+
+    readonly property bool statusAvailable: backend.devices.values.length > 0
+    readonly property var connectedDevice: backend.devices.values.find(device => device && device.connected) || null
     readonly property bool linkConnected: connectedDevice !== null
     readonly property string connectionLabel: {
         if (!statusAvailable) return "Network details unavailable"
@@ -20,8 +54,8 @@ QtObject {
     readonly property string connectivityText: {
         if (!statusAvailable) return "No connection data from the network backend"
         if (!connectedDevice) return "No active network link"
-        if (!Networking.canCheckConnectivity) return "Link connected"
-        switch (Networking.connectivity) {
+        if (!backend.canCheckConnectivity) return "Link connected"
+        switch (backend.connectivity) {
         case NetworkConnectivity.Full: return "Internet available"
         case NetworkConnectivity.Portal: return "Network sign-in required"
         case NetworkConnectivity.Limited: return "Limited connectivity"
@@ -38,7 +72,7 @@ QtObject {
      */
     readonly property var wifiDevice: {
         const devices =
-            Networking.devices.values
+            backend.devices.values
 
         for (let i = 0; i < devices.length; ++i) {
             const device =
@@ -59,8 +93,8 @@ QtObject {
         wifiDevice !== null
 
     readonly property bool enabled:
-        Networking.wifiEnabled
-        && Networking.wifiHardwareEnabled
+        backend.wifiEnabled
+        && backend.wifiHardwareEnabled
 
     readonly property var networks:
         wifiDevice && wifiDevice.networks
@@ -109,21 +143,24 @@ QtObject {
         ? activeNetwork.signalStrength
         : 0.0
 
-    /*
-     * Chỉ scan khi popup đang mở.
-     */
-    function startScanning() {
-        if (!wifiDevice)
-            return
-
-        wifiDevice.scannerEnabled = true
+    // Each visible consumer owns one scan request; closing one cannot stop another.
+    function startScanning(owner = "wifi-popup") {
+        if (scanOwners.indexOf(owner) < 0) scanOwners = scanOwners.concat([owner])
     }
-
-    function stopScanning() {
-        if (!wifiDevice)
-            return
-
-        wifiDevice.scannerEnabled = false
+    function stopScanning(owner = "wifi-popup") {
+        scanOwners = scanOwners.filter(value => value !== owner)
+    }
+    function canConnect(network) {
+        return available && enabled && network && networks.values.indexOf(network) >= 0
+            && !network.connected && !network.stateChanging
+            && (network.known || network.security === WifiSecurityType.Open)
+    }
+    function networkStatus(network) {
+        if (!network) return ""
+        if (network.stateChanging) return "Connecting…"
+        if (network.connected) return "Connected"
+        if (!network.known && network.security !== WifiSecurityType.Open) return "Set up in Settings"
+        return network.known ? "Saved" : "Open network"
     }
 
     /*
@@ -134,23 +171,20 @@ QtObject {
      * kiến trúc service/widget.
      */
     function connectNetwork(network) {
-        if (!network)
-            return
-
-        if (network.connected)
-            return
-
+        if (!canConnect(network)) return
+        connectionError = ""
+        lastAttempt = network
         network.connect()
     }
 
     function disconnect() {
-        if (!activeNetwork)
+        if (!activeNetwork || activeNetwork.stateChanging)
             return
 
         activeNetwork.disconnect()
     }
 
     function setWifiEnabled(value) {
-        Networking.wifiEnabled = value
+        if (available && hardwareEnabled) backend.wifiEnabled = value
     }
 }

@@ -1,3 +1,5 @@
+local theme = require("config.theme")
+
 -- How Hyprland work?
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 
@@ -9,8 +11,8 @@ hl.config({
 		border_size = 2,
 
 		col = {
-			active_border = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
-			inactive_border = "rgba(595959aa)",
+			active_border = { colors = { theme.rgba(theme.purple), theme.rgba(theme.pink) }, angle = 45 },
+			inactive_border = theme.rgba(theme.selection),
 		},
 
 		-- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -27,6 +29,7 @@ hl.config({
 	},
 
 	misc = {
+		background_color = theme.rgba(theme.background),
 		disable_hyprland_logo = true,
 		disable_splash_rendering = true,
 
